@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FB521973-C057-463E-8CD4-9A278491EFBA}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{67E2F12A-40BB-4A67-97E8-155F5AACDE96}"
+	ProjectSection(SolutionItems) = preProject
+		..\Directory.Build.props = ..\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BootstrapBlazor.PdfReader", "src\BootstrapBlazor.PdfReader\BootstrapBlazor.PdfReader.csproj", "{2B391A94-7BE6-45C3-A126-8DF972FBA16F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B391A94-7BE6-45C3-A126-8DF972FBA16F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B391A94-7BE6-45C3-A126-8DF972FBA16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B391A94-7BE6-45C3-A126-8DF972FBA16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B391A94-7BE6-45C3-A126-8DF972FBA16F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{67E2F12A-40BB-4A67-97E8-155F5AACDE96} = {FB521973-C057-463E-8CD4-9A278491EFBA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8B41E9C-39E0-4B91-BB02-39FD2714C2D7}
+	EndGlobalSection
+EndGlobal

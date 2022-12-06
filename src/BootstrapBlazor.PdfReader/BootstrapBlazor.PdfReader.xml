@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BootstrapBlazor.PdfReader</name>
+    </assembly>
+    <members>
+        <member name="T:BootstrapBlazor.Components.PdfReader">
+            <summary>
+            Blazor Pdf Reader PDF阅读器 组件 
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.ButtonGetFile">
+            <summary>
+            获得/设置 打开文件按钮文字 默认为 打开
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.Height">
+            <summary>
+            获得/设置 宽
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.stream">
+            <summary>
+            获得/设置 文件流
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.UrlBase">
+            <summary>
+            获得/设置 UrlBase
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.PdfFile">
+            <summary>
+            获得/设置 PDF文件
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.OnInfo">
+            <summary>
+            获得/设置 信息回调方法
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.OnError">
+            <summary>
+            获得/设置 错误回调方法
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.pdfElement">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:BootstrapBlazor.Components.PdfReader.ShowPdf(System.IO.Stream)">
+            <summary>
+            打开文件
+            </summary> 
+        </member>
+        <member name="M:BootstrapBlazor.Components.PdfReader.Result(System.String)">
+            <summary>
+            签名完成回调方法
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
