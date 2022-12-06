@@ -19,9 +19,27 @@ https://blazor.app1.es/pdfReaders
 
 3.razor页面
 ```
+<PdfReader PdfFile="https://blazor.app1.es/_content/DemoShared/sample.pdf" />
+           
 <PdfReader UrlBase="https://blazor.app1.es/"
-           PdfFile="_content/BootstrapBlazor.PdfReader/sample.pdf" />
+           PdfFile="_content/DemoShared/sample.pdf" />
 ```
+
+4.参数说明
+
+|  参数   | 说明  | 默认值  | 
+|  ----  | ----  | ----  | 
+| PdfStream  | 用于渲染的文件流,为空则用URL参数读取文件 |  | 
+| PdfFile  | PDF文件路径, https://xx.com/sample.pdf | null | 
+| Func<string, Task>? OnInfo | 信息回调 | |
+| Func<string, Task>? OnError | 错误回调 |
+| EnableStreamingMode  | 使用流化模式,可跨域读取文件 | false | 
+| UrlBase  | PDF文件基础路径, (使用流化模式才需要设置),  https://xx.com |  | 
+| Height  | 宽 | 700 | 
+| Page | 指定页码 | 1 |
+| Search | 查询字符串 | |
+| View | 视图模式 | FitV |
+| Pagemode | 页面模式 | thumbs |
 
 ---
 #### Blazor 组件

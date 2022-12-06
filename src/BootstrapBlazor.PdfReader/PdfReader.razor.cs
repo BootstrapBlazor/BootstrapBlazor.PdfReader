@@ -7,6 +7,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Collections;
+using static BootstrapBlazor.Components.PdfReaderOptions;
 
 namespace BootstrapBlazor.Components;
 
@@ -18,31 +19,13 @@ public partial class PdfReader : IAsyncDisposable
     [Inject] IJSRuntime? JS { get; set; }
 
     /// <summary>
-    /// 获得/设置 打开文件按钮文字 默认为 打开
-    /// </summary>
-    [Parameter]
-    public string? ButtonGetFile { get; set; } = "打开";
-
-    /// <summary>
-    /// 获得/设置 宽
-    /// </summary>
-    [Parameter]
-    public int Height { get; set; } = 700;
-
-    /// <summary>
     /// 获得/设置 文件流
     /// </summary>
     [Parameter]
-    public Stream? stream { get; set; }
+    public Stream? PdfStream { get; set; }
 
     /// <summary>
-    /// 获得/设置 UrlBase
-    /// </summary>
-    [Parameter]
-    public string? UrlBase { get; set; }
-
-    /// <summary>
-    /// 获得/设置 PDF文件
+    /// 获得/设置 PDF文件URL
     /// </summary>
     [Parameter]
     public string? PdfFile { get; set; }
@@ -60,6 +43,44 @@ public partial class PdfReader : IAsyncDisposable
     [Parameter]
     public Func<string, Task>? OnError { get; set; }
 
+    /// <summary>
+    /// 获得/设置 使用流化模式,可跨域读取文件. 默认为 false
+    /// </summary>
+    [Parameter]
+    public bool EnableStreamingMode { get; set; }
+
+    /// <summary>
+    /// 获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
+    /// </summary>
+    [Parameter]
+    public string? UrlBase { get; set; }
+
+    /// <summary>
+    /// 获得/设置 宽
+    /// </summary>
+    [Parameter]
+    public int Height { get; set; } = 700;
+
+    /// <summary>
+    /// 获得/设置 指定页码
+    /// </summary>
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    /// <summary>
+    /// 查询字符串
+    /// </summary>
+    public string? Search { get; set; }
+
+    /// <summary>
+    /// 视图模式
+    /// </summary>
+    public string? View { get; set; } = "FitV";
+
+    /// <summary>
+    /// 获得/设置 宽
+    /// </summary>
+    public string? Pagemode { get; set; } = "thumbs";
 
     private IJSObjectReference? module;
     private DotNetObjectReference<PdfReader>? instance { get; set; }
@@ -68,7 +89,8 @@ public partial class PdfReader : IAsyncDisposable
     ///
     /// </summary>
     protected ElementReference pdfElement { get; set; }
-
+    protected PdfReaderOptions Options   = new PdfReaderOptions();
+        
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         try
@@ -77,14 +99,34 @@ public partial class PdfReader : IAsyncDisposable
             {
                 module = await JS!.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.PdfReader/api.js");
                 instance = DotNetObjectReference.Create(this);
-                if (stream != null)
+                await module!.InvokeVoidAsync("addScript", null);
+                Options = new PdfReaderOptions()
                 {
-                    ShowPdf(stream);
+                    Height = $"{Height}px",
+                    Page = Page.ToString(),
+                    ForceIframe = true,
+                    pdfOpenParams = new PdfOpenParams()
+                    {
+                        View = View,
+                        Pagemode = Pagemode,
+                        Search = Search
+                    }
+                }; 
+                if (PdfStream != null)
+                {
+                    ShowPdf(PdfStream);
                 }
                 else if (!string.IsNullOrEmpty(PdfFile))
                 {
-                    var byteArray = await GetImageAsByteArray(PdfFile, UrlBase!);
-                    ShowPdf(new MemoryStream(byteArray));
+                    if (!EnableStreamingMode)
+                    {
+                        ShowPdfwithUrl($"{UrlBase}{PdfFile}");
+                    }
+                    else
+                    {
+                        var byteArray = await GetImageAsByteArray(PdfFile, UrlBase!);
+                        ShowPdf(new MemoryStream(byteArray));
+                    }
                 }
                 else
                 {
@@ -130,8 +172,23 @@ public partial class PdfReader : IAsyncDisposable
         try
         {
             using var streamRef = new DotNetStreamReference(stream);
-            await module!.InvokeVoidAsync("addScript", null);
-            await module!.InvokeVoidAsync("showPdf", instance, pdfElement, streamRef);
+            await module!.InvokeVoidAsync("showPdf", instance, pdfElement, streamRef, Options);
+        }
+        catch (Exception e)
+        {
+            msg += e.Message + Environment.NewLine;
+            if (OnError != null) await OnError.Invoke(e.Message);
+        }
+    }
+
+    /// <summary>
+    /// 打开文件
+    /// </summary> 
+    public virtual async void ShowPdfwithUrl(string url)
+    {
+        try
+        {
+            await module!.InvokeVoidAsync("showPdfwithUrl", instance, pdfElement, url, Options);
         }
         catch (Exception e)
         {
