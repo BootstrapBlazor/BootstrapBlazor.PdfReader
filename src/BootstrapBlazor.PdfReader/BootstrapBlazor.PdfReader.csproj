@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Version>7.0.5</Version>
+        <Version>7.0.6</Version>
         <PackageProjectUrl>https://github.com/densen2014/BootstrapBlazor.PdfReader</PackageProjectUrl>
         <RepositoryUrl>https://github.com/densen2014/BootstrapBlazor.PdfReader</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -15,7 +15,8 @@
         <AssemblyName>BootstrapBlazor.PdfReader</AssemblyName>
         <RootNamespace>BootstrapBlazor.PdfReader</RootNamespace>
         <AssemblyOriginatorKeyFile>..\keys\Longbow.Utility.snk</AssemblyOriginatorKeyFile>
-    </PropertyGroup>
+         <SignAssembly>True</SignAssembly>
+   </PropertyGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.10" />
