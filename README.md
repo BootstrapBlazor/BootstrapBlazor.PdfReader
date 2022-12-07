@@ -19,10 +19,15 @@ https://blazor.app1.es/pdfReaders
 
 3.razor页面
 ```
-<PdfReader PdfFile="https://blazor.app1.es/_content/DemoShared/sample.pdf" />
+<PdfReader PdfFile="https://densen.es/test/webdev/pdf/sample.pdf" />
            
 <PdfReader UrlBase="https://blazor.app1.es/"
            PdfFile="_content/DemoShared/sample.pdf" />
+
+<PdfReader UrlBase="https://blazor.app1.es/"
+           PdfFile="_content/DemoShared/sample.pdf" 
+           EnableStreamingMode="true"/>
+
 ```
 
 4.参数说明
@@ -35,11 +40,16 @@ https://blazor.app1.es/pdfReaders
 | Func<string, Task>? OnError | 错误回调 |
 | EnableStreamingMode  | 使用流化模式,可跨域读取文件 | false | 
 | UrlBase  | PDF文件基础路径, (使用流化模式才需要设置),  https://xx.com |  | 
-| Height  | 宽 | 700 | 
-| Page | 指定页码 | 1 |
-| Search | 查询字符串 | |
-| View | 视图模式 | FitV |
-| Pagemode | 页面模式 | thumbs |
+| Height  | 高 | 700 | 
+| Page | 指定页码,如果浏览器支持，将加载PDF并自动滚动到第n页 | 1 |
+| ForceIframe | 强制使用 Iframe | false |
+| ForcePDFJS | 强制使用 PDF.js | false |
+| PDFJS_URL | PDF.js 浏览器页面路径 | https://pdfobject.com/pdfjs/web/viewer.html |
+| Search | *查询字符串 | |
+| View | *视图模式 | FitV |
+| Pagemode | *页面模式 | thumbs |
+
+*表示PDF.js 专有
 
 ---
 #### Blazor 组件

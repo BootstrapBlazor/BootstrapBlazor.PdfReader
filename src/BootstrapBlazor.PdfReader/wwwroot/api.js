@@ -7,7 +7,7 @@ export function addScript() {
     return false;
 }
 
-export async function showPdf(wrapperc, element, stream, options) {
+export async function showPdf(wrapperc, element, stream) {
     const arrayBuffer = await stream.arrayBuffer();
     const blob = new Blob([arrayBuffer], { type: 'application/pdf' });//必须要加type
     const url = URL.createObjectURL(blob);
@@ -17,7 +17,6 @@ export async function showPdf(wrapperc, element, stream, options) {
 }
 
 export async function showPdfwithUrl(wrapperc, element, url, options) {
-    PDFObject.embed(url, element, { forceIframe: true });//只有iframe可以打开blob链接
-    URL.revokeObjectURL(url);
+    PDFObject.embed(url, element, options);
     wrapperc.invokeMethodAsync("Result", "PDFObject OK")
 }

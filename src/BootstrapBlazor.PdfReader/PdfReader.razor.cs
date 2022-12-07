@@ -56,30 +56,51 @@ public partial class PdfReader : IAsyncDisposable
     public string? UrlBase { get; set; }
 
     /// <summary>
-    /// 获得/设置 宽
+    /// 获得/设置 高
     /// </summary>
     [Parameter]
     public int Height { get; set; } = 700;
 
     /// <summary>
-    /// 获得/设置 指定页码
+    /// 获得/设置 指定页码,如果浏览器支持，将加载PDF并自动滚动到第n页
     /// </summary>
     [Parameter]
     public int Page { get; set; } = 1;
 
     /// <summary>
-    /// 查询字符串
+    /// 获得/设置 强制使用 Iframe, 默认：false
+    /// </summary> 
+    [Parameter]
+    public bool ForceIframe { get; set; }
+
+    /// <summary>
+    /// 获得/设置 强制使用 PDF.js
+    /// </summary> 
+    [Parameter]
+    public bool ForcePDFJS { get; set; }
+
+    /// <summary>
+    /// 获得/设置 PDF.js 浏览器页面路径
+    /// </summary> 
+    [Parameter]
+    public string PDFJS_URL { get; set; } = "https://pdfobject.com/pdfjs/web/viewer.html";
+
+    /// <summary>
+    /// 获得/设置 查询字符串 (PDF.js 专有)
     /// </summary>
+    [Parameter]
     public string? Search { get; set; }
 
     /// <summary>
-    /// 视图模式
+    /// 获得/设置 视图模式 (PDF.js 专有)
     /// </summary>
+    [Parameter]
     public string? View { get; set; } = "FitV";
 
     /// <summary>
-    /// 获得/设置 宽
+    /// 获得/设置 页面模式 (PDF.js 专有)
     /// </summary>
+    [Parameter]
     public string? Pagemode { get; set; } = "thumbs";
 
     private IJSObjectReference? module;
@@ -100,38 +121,7 @@ public partial class PdfReader : IAsyncDisposable
                 module = await JS!.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.PdfReader/api.js");
                 instance = DotNetObjectReference.Create(this);
                 await module!.InvokeVoidAsync("addScript", null);
-                Options = new PdfReaderOptions()
-                {
-                    Height = $"{Height}px",
-                    Page = Page.ToString(),
-                    ForceIframe = true,
-                    pdfOpenParams = new PdfOpenParams()
-                    {
-                        View = View,
-                        Pagemode = Pagemode,
-                        Search = Search
-                    }
-                }; 
-                if (PdfStream != null)
-                {
-                    ShowPdf(PdfStream);
-                }
-                else if (!string.IsNullOrEmpty(PdfFile))
-                {
-                    if (!EnableStreamingMode)
-                    {
-                        ShowPdfwithUrl($"{UrlBase}{PdfFile}");
-                    }
-                    else
-                    {
-                        var byteArray = await GetImageAsByteArray(PdfFile, UrlBase!);
-                        ShowPdf(new MemoryStream(byteArray));
-                    }
-                }
-                else
-                {
-                    if (OnError != null) await OnError.Invoke("文件在哪?");
-                }
+                await Refresh();
             }
         }
         catch (Exception e)
@@ -163,16 +153,54 @@ public partial class PdfReader : IAsyncDisposable
 
         return await response.Content.ReadAsByteArrayAsync();
     }
+    public virtual async Task Refresh()
+    {
+        Options = new PdfReaderOptions()
+        {
+            //Height = $"{Height}px",
+            ForceIframe = PdfStream != null ? true : ForceIframe,
+            ForcePDFJS = ForcePDFJS,
+            PDFJS_URL = PDFJS_URL,
+            pdfOpenParams = new PdfOpenParams()
+            {
+                Page = Page,
+                View = View,
+                Pagemode = Pagemode,
+                Search = Search,
+            }
+        };
+        if (PdfStream != null)
+        {
+            await ShowPdf(PdfStream);
+        }
+        else if (!string.IsNullOrEmpty(PdfFile))
+        {
+            if (!EnableStreamingMode)
+            {
+                await ShowPdfwithUrl($"{UrlBase}{PdfFile}");
+            }
+            else
+            {
+                var byteArray = await GetImageAsByteArray(PdfFile, UrlBase!);
+                await ShowPdf(new MemoryStream(byteArray));
+            }
+        }
+        else
+        {
+            if (OnError != null) await OnError.Invoke("文件在哪?");
+        }
+
+    }
 
     /// <summary>
-    /// 打开文件
+    /// 打开 stream
     /// </summary> 
-    public virtual async void ShowPdf(Stream stream)
+    public virtual async Task ShowPdf(Stream stream)
     {
         try
         {
             using var streamRef = new DotNetStreamReference(stream);
-            await module!.InvokeVoidAsync("showPdf", instance, pdfElement, streamRef, Options);
+            await module!.InvokeVoidAsync("showPdf", instance, pdfElement, streamRef);
         }
         catch (Exception e)
         {
@@ -182,9 +210,9 @@ public partial class PdfReader : IAsyncDisposable
     }
 
     /// <summary>
-    /// 打开文件
+    /// 打开 URL
     /// </summary> 
-    public virtual async void ShowPdfwithUrl(string url)
+    public virtual async Task ShowPdfwithUrl(string url)
     {
         try
         {
@@ -198,7 +226,7 @@ public partial class PdfReader : IAsyncDisposable
     }
 
     /// <summary>
-    /// 签名完成回调方法
+    /// 完成回调方法
     /// </summary>
     /// <param name="val"></param>
     /// <returns></returns>
