@@ -37,7 +37,7 @@ public class PdfReaderOptions
     /// 获得/设置 PDF.js 浏览器页面路径
     /// </summary>
     [JsonPropertyName("PDFJS_URL")]
-    public string PDFJS_URL { get; set; } = "https://pdfobject.com/pdfjs/web/viewer.html";
+    public string PDFJS_URL { get; set; } = "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
 
     /// <summary>
     /// 获得/设置 打开参数

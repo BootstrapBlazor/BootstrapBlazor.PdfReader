@@ -83,7 +83,7 @@ public partial class PdfReader : IAsyncDisposable
     /// 获得/设置 PDF.js 浏览器页面路径
     /// </summary> 
     [Parameter]
-    public string PDFJS_URL { get; set; } = "https://pdfobject.com/pdfjs/web/viewer.html";
+    public string PDFJS_URL { get; set; } = "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
 
     /// <summary>
     /// 获得/设置 查询字符串 (PDF.js 专有)

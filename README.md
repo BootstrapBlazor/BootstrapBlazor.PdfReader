@@ -44,7 +44,7 @@ https://blazor.app1.es/pdfReaders
 | Page | 指定页码,如果浏览器支持，将加载PDF并自动滚动到第n页 | 1 |
 | ForceIframe | 强制使用 Iframe | false |
 | ForcePDFJS | 强制使用 PDF.js | false |
-| PDFJS_URL | PDF.js 浏览器页面路径 | https://pdfobject.com/pdfjs/web/viewer.html |
+| PDFJS_URL | PDF.js 浏览器页面路径 | 内置 |
 | Search | *查询字符串 | |
 | View | *视图模式 | FitV |
 | Pagemode | *页面模式 | thumbs |
