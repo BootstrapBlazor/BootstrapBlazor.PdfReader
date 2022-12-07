@@ -56,7 +56,7 @@
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.ForcePDFJS">
             <summary>
-            获得/设置 强制使用 PDF.js
+            获得/设置 强制使用 PDF.js (跨域推荐启用此选项)
             </summary> 
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.PDFJS_URL">
@@ -87,6 +87,11 @@
         <member name="M:BootstrapBlazor.Components.PdfReader.ShowPdf(System.IO.Stream)">
             <summary>
             打开 stream
+            </summary> 
+        </member>
+        <member name="M:BootstrapBlazor.Components.PdfReader.ShowPdfjs(System.IO.Stream)">
+            <summary>
+            打开 stream 并用 Pdf.js
             </summary> 
         </member>
         <member name="M:BootstrapBlazor.Components.PdfReader.ShowPdfwithUrl(System.String)">

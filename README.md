@@ -51,6 +51,9 @@ https://blazor.app1.es/pdfReaders
 
 *表示PDF.js 专有
 
+**优先嵌入模式,不支持则回落倒pdf.js模式**
+**跨域最佳体验: EnableStreamingMode=true , ForcePDFJS=true**
+
 ---
 #### Blazor 组件
 

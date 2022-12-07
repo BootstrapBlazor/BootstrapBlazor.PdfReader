@@ -5,6 +5,7 @@
 // **********************************
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 using System.Collections;
 using static BootstrapBlazor.Components.PdfReaderOptions;
@@ -74,7 +75,7 @@ public partial class PdfReader : IAsyncDisposable
     public bool ForceIframe { get; set; }
 
     /// <summary>
-    /// 获得/设置 强制使用 PDF.js
+    /// 获得/设置 强制使用 PDF.js (跨域推荐启用此选项)
     /// </summary> 
     [Parameter]
     public bool ForcePDFJS { get; set; }
@@ -179,6 +180,11 @@ public partial class PdfReader : IAsyncDisposable
             {
                 await ShowPdfwithUrl($"{UrlBase}{PdfFile}");
             }
+            else if (ForcePDFJS)
+            {
+                var byteArray = await GetImageAsByteArray(PdfFile, UrlBase!);
+                await ShowPdfjs(new MemoryStream(byteArray));
+            }
             else
             {
                 var byteArray = await GetImageAsByteArray(PdfFile, UrlBase!);
@@ -200,7 +206,25 @@ public partial class PdfReader : IAsyncDisposable
         try
         {
             using var streamRef = new DotNetStreamReference(stream);
-            await module!.InvokeVoidAsync("showPdf", instance, pdfElement, streamRef);
+            await module!.InvokeVoidAsync("showPdf", instance, pdfElement, streamRef, Options);
+        }
+        catch (Exception e)
+        {
+            msg += e.Message + Environment.NewLine;
+            if (OnError != null) await OnError.Invoke(e.Message);
+        }
+    }
+
+    /// <summary>
+    /// 打开 stream 并用 Pdf.js
+    /// </summary> 
+    public virtual async Task ShowPdfjs(Stream stream)
+    {
+        try
+        {
+            using var streamRef = new DotNetStreamReference(stream);
+            Options.ForcePDFJS = true;
+            await module!.InvokeVoidAsync("showPdfjs", instance, pdfElement, streamRef, Options);
         }
         catch (Exception e)
         {
