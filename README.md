@@ -28,6 +28,12 @@ https://blazor.app1.es/pdfReaders
            PdfFile="_content/DemoShared/sample.pdf" 
            EnableStreamingMode="true"/>
 
+<pre>跨域最佳体验</pre>
+
+<PdfReader UrlBase="https://blazor.app1.es/"
+           PdfFile="_content/DemoShared/sample.pdf" 
+           EnableStreamingMode="true"
+           ForcePDFJS="true" />
 ```
 
 4.参数说明
@@ -52,7 +58,8 @@ https://blazor.app1.es/pdfReaders
 *表示PDF.js 专有
 
 **优先嵌入模式,不支持则回落倒pdf.js模式**
-**跨域最佳体验: EnableStreamingMode=true , ForcePDFJS=true**
+
+**跨域最佳体验:**  EnableStreamingMode=true , ForcePDFJS=true
 
 ---
 #### Blazor 组件
