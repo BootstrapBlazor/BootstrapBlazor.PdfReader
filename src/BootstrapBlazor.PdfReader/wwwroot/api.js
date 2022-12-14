@@ -1,9 +1,19 @@
 ﻿//import '/_content/BootstrapBlazor.PdfReader/pdfobject.min.js';
 export function addScript() { 
+    let url = '/_content/BootstrapBlazor.PdfReader/pdfobject.min.js';
+    let scriptTags = document.querySelectorAll('body > script');
+    scriptTags.forEach(scriptTag => {
+        if (scriptTag) {
+            let srcAttribute = scriptTag.getAttribute('src');
+            if (srcAttribute && srcAttribute.startsWith(url)) {
+                return true;
+            }
+        }
+    });
     let script = document.createElement('script');
-    script.src = '/_content/BootstrapBlazor.PdfReader/pdfobject.min.js';
-    script.defer = true;
-    document.head.appendChild(script);
+    script.src = url;
+    //script.defer = true;
+    document.body.appendChild(script);
     return false;
 }
 
