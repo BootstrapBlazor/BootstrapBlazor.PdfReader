@@ -23243,11 +23243,11 @@ const CharstringValidationData12 = [null, null, null, {
 class CFFParser {
   constructor(file, properties, seacAnalysisEnabled) {
     this.bytes = file.getBytes();
-    this.properties = properties;
+    this.txt = properties;
     this.seacAnalysisEnabled = !!seacAnalysisEnabled;
   }
   parse() {
-    const properties = this.properties;
+    const properties = this.txt;
     const cff = new CFF();
     this.cff = cff;
     const header = this.parseHeader();
@@ -38112,7 +38112,7 @@ var _fonts_utils = __w_pdfjs_require__(36);
 var _util = __w_pdfjs_require__(2);
 class CFFFont {
   constructor(file, properties) {
-    this.properties = properties;
+    this.txt = properties;
     const parser = new _cff_parser.CFFParser(file, properties, _fonts_utils.SEAC_ANALYSIS_ENABLED);
     this.cff = parser.parse();
     this.cff.duplicateFirstGlyph();
@@ -38134,7 +38134,7 @@ class CFFFont {
   }
   getGlyphMapping() {
     const cff = this.cff;
-    const properties = this.properties;
+    const properties = this.txt;
     const {
       cidToGidMap,
       cMap
@@ -38203,7 +38203,7 @@ class CFFFont {
       }
     }
     if (map.length > 0) {
-      this.properties.builtInEncoding = map;
+      this.txt.builtInEncoding = map;
     }
   }
 }
@@ -42844,8 +42844,8 @@ class Type1Font {
     const eexecBlock = getEexecBlock(file, eexecBlockLength);
     const eexecBlockParser = new _type1_parser.Type1Parser(eexecBlock.stream, true, _fonts_utils.SEAC_ANALYSIS_ENABLED);
     const data = eexecBlockParser.extractFontProgram(properties);
-    for (const key in data.properties) {
-      properties[key] = data.properties[key];
+    for (const key in data.txt) {
+      properties[key] = data.txt[key];
     }
     const charstrings = data.charstrings;
     const type2Charstrings = this.getType2Charstrings(charstrings);
@@ -43437,7 +43437,7 @@ class Type1Parser {
             length = this.readInt();
             this.getToken();
             data = length > 0 ? stream.getBytes(length) : new Uint8Array(0);
-            lenIV = program.properties.privateData.lenIV;
+            lenIV = program.txt.privateData.lenIV;
             const encoded = this.readCharStrings(data, lenIV);
             this.nextChar();
             token = this.getToken();
@@ -43460,7 +43460,7 @@ class Type1Parser {
             length = this.readInt();
             this.getToken();
             data = length > 0 ? stream.getBytes(length) : new Uint8Array(0);
-            lenIV = program.properties.privateData.lenIV;
+            lenIV = program.txt.privateData.lenIV;
             const encoded = this.readCharStrings(data, lenIV);
             this.nextChar();
             token = this.getToken();
@@ -43476,16 +43476,16 @@ class Type1Parser {
         case "FamilyOtherBlues":
           const blueArray = this.readNumberArray();
           if (blueArray.length > 0 && blueArray.length % 2 === 0 && HINTING_ENABLED) {
-            program.properties.privateData[token] = blueArray;
+            program.txt.privateData[token] = blueArray;
           }
           break;
         case "StemSnapH":
         case "StemSnapV":
-          program.properties.privateData[token] = this.readNumberArray();
+          program.txt.privateData[token] = this.readNumberArray();
           break;
         case "StdHW":
         case "StdVW":
-          program.properties.privateData[token] = this.readNumberArray()[0];
+          program.txt.privateData[token] = this.readNumberArray()[0];
           break;
         case "BlueShift":
         case "lenIV":
@@ -43493,10 +43493,10 @@ class Type1Parser {
         case "BlueScale":
         case "LanguageGroup":
         case "ExpansionFactor":
-          program.properties.privateData[token] = this.readNumber();
+          program.txt.privateData[token] = this.readNumber();
           break;
         case "ForceBold":
-          program.properties.privateData[token] = this.readBoolean();
+          program.txt.privateData[token] = this.readBoolean();
           break;
       }
     }

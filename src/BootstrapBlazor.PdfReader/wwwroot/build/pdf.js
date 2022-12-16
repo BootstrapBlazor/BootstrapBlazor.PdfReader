@@ -3698,7 +3698,7 @@ class AnnotationEditorUIManager {
     }
     this.#activeEditor = editor;
     if (editor) {
-      this.#dispatchUpdateUI(editor.propertiesToUpdate);
+      this.#dispatchUpdateUI(editor.txtToUpdate);
     }
   }
   toggleSelected(editor) {
@@ -3712,7 +3712,7 @@ class AnnotationEditorUIManager {
     }
     this.#selectedEditors.add(editor);
     editor.select();
-    this.#dispatchUpdateUI(editor.propertiesToUpdate);
+    this.#dispatchUpdateUI(editor.txtToUpdate);
     this.#dispatchUpdateStates({
       hasSelectedEditor: true
     });
@@ -3726,7 +3726,7 @@ class AnnotationEditorUIManager {
     this.#selectedEditors.clear();
     this.#selectedEditors.add(editor);
     editor.select();
-    this.#dispatchUpdateUI(editor.propertiesToUpdate);
+    this.#dispatchUpdateUI(editor.txtToUpdate);
     this.#dispatchUpdateStates({
       hasSelectedEditor: true
     });
