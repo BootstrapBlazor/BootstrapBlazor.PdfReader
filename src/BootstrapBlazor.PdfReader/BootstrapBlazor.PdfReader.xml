@@ -19,16 +19,6 @@
             获得/设置 PDF文件URL
             </summary>
         </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.OnInfo">
-            <summary>
-            获得/设置 信息回调方法
-            </summary>
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.OnError">
-            <summary>
-            获得/设置 错误回调方法
-            </summary>
-        </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.EnableStreamingMode">
             <summary>
             获得/设置 使用流化模式,可跨域读取文件. 默认为 false
@@ -39,137 +29,66 @@
             获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
             </summary>
         </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.Width">
+            <summary>
+            获得/设置 宽 单位(px|%) 默认 100%
+            </summary>
+        </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Height">
             <summary>
-            获得/设置 高
+            获得/设置 高 单位(px|%) 默认 500px
             </summary>
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Page">
             <summary>
             获得/设置 指定页码,如果浏览器支持，将加载PDF并自动滚动到第n页
+            </summary> 
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.Navpanes">
+            <summary>
+            获得/设置 Navpanes (PDF.js 专有)
+            </summary> 
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.Toolbar">
+            <summary>
+            获得/设置 Toolbar (PDF.js 专有)
+            </summary> 
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.Statusbar">
+            <summary>
+            获得/设置 Statusbar (PDF.js 专有)
+            </summary> 
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.View">
+            <summary>
+            视图模式 (PDF.js 专有)
             </summary>
         </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.ForceIframe">
+        <member name="P:BootstrapBlazor.Components.PdfReader.Pagemode">
             <summary>
-            获得/设置 强制使用 Iframe, 默认：false
-            </summary> 
+            页面模式 (PDF.js 专有)
+            </summary>
         </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.ForcePDFJS">
+        <member name="P:BootstrapBlazor.Components.PdfReader.Search">
             <summary>
-            获得/设置 强制使用 PDF.js (跨域推荐启用此选项)
-            </summary> 
+            查询字符串的(PDF.js 专有)
+            </summary>
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.PDFJS_URL">
             <summary>
             获得/设置 PDF.js 浏览器页面路径
             </summary> 
         </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.Search">
-            <summary>
-            获得/设置 查询字符串 (PDF.js 专有)
-            </summary>
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.View">
-            <summary>
-            获得/设置 视图模式 (PDF.js 专有)
-            </summary>
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.Pagemode">
-            <summary>
-            获得/设置 页面模式 (PDF.js 专有)
-            </summary>
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.pdfElement">
-             <summary>
-            
-             </summary>
-        </member>
         <member name="M:BootstrapBlazor.Components.PdfReader.ShowPdf(System.IO.Stream)">
             <summary>
             打开 stream
-            </summary> 
-        </member>
-        <member name="M:BootstrapBlazor.Components.PdfReader.ShowPdfjs(System.IO.Stream)">
-            <summary>
-            打开 stream 并用 Pdf.js
-            </summary> 
-        </member>
-        <member name="M:BootstrapBlazor.Components.PdfReader.ShowPdfwithUrl(System.String)">
-            <summary>
-            打开 URL
-            </summary> 
-        </member>
-        <member name="M:BootstrapBlazor.Components.PdfReader.Result(System.String)">
-            <summary>
-            完成回调方法
             </summary>
-            <param name="val"></param>
+        </member>
+        <member name="M:BootstrapBlazor.Components.PdfReader.DisposeAsync">
+            <summary>
+            <inheritdoc/>
+            </summary>
             <returns></returns>
-        </member>
-        <member name="T:BootstrapBlazor.Components.PdfReaderOptions">
-            <summary>
-            选项
-            </summary>
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.ForceIframe">
-            <summary>
-            获得/设置 强制使用 Iframe, 默认：false
-            </summary> 
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.ForcePDFJS">
-            <summary>
-            获得/设置 强制使用 pdf.js, 默认：false
-            </summary> 
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.PDFJS_URL">
-            <summary>
-            获得/设置 PDF.js 浏览器页面路径
-            </summary>
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.pdfOpenParams">
-            <summary>
-            获得/设置 打开参数
-            </summary> 
-        </member>
-        <member name="T:BootstrapBlazor.Components.PdfReaderOptions.PdfOpenParams">
-            <summary>
-            打开参数, 警告：大部分参数是 PDF.js 专有的。
-            </summary>
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.PdfOpenParams.Page">
-            <summary>
-            获得/设置 指定页码,如果浏览器支持，将加载PDF并自动滚动到第n页
-            </summary> 
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.PdfOpenParams.Navpanes">
-            <summary>
-            获得/设置 Navpanes (PDF.js 专有)
-            </summary> 
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.PdfOpenParams.Toolbar">
-            <summary>
-            获得/设置 Toolbar (PDF.js 专有)
-            </summary> 
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.PdfOpenParams.Statusbar">
-            <summary>
-            获得/设置 Statusbar (PDF.js 专有)
-            </summary> 
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.PdfOpenParams.View">
-            <summary>
-            视图模式 (PDF.js 专有)
-            </summary>
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.PdfOpenParams.Pagemode">
-            <summary>
-            页面模式 (PDF.js 专有)
-            </summary>
-        </member>
-        <member name="P:BootstrapBlazor.Components.PdfReaderOptions.PdfOpenParams.Search">
-            <summary>
-            查询字符串的(PDF.js 专有)
-            </summary>
         </member>
     </members>
 </doc>

@@ -1,3 +1,7 @@
 ﻿@namespace BootstrapBlazor.Components
 
-<div @ref="pdfElement" style='@($"height: {Height}px;")'></div>
+@if (!string.IsNullOrEmpty(Url))
+{
+    <iframe @ref="Element"  allow="fullscreen"
+            style="@($"border: none; width: {Width}; height: {Height};")" />
+}
