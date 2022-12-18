@@ -1756,7 +1756,7 @@ const PDFViewerApplication = {
     if (downloadUrl) {
       this._downloadUrl = downloadUrl === url ? this.baseUrl : downloadUrl.split("#")[0];
     }
-    let title = (0, _pdfjsLib.getPdfFilenameFromUrl)(url, "");
+    let title = (0, _pdfjsLib.getFilenamenameFromUrl)(url, "");
     if (!title) {
       try {
         title = decodeURIComponent((0, _pdfjsLib.getFilenameFromUrl)(url)) || url;
@@ -1775,7 +1775,7 @@ const PDFViewerApplication = {
     document.title = `${editorIndicator ? "* " : ""}${title}`;
   },
   get _docFilename() {
-    return this._contentDispositionFilename || (0, _pdfjsLib.getPdfFilenameFromUrl)(this.url);
+    return this._contentDispositionFilename || (0, _pdfjsLib.getFilenamenameFromUrl)(this.url);
   },
   _hideViewBookmark() {
     this.appConfig.secondaryToolbar.viewBookmarkButton.hidden = true;
@@ -12251,7 +12251,7 @@ class DownloadManager {
     download(blobUrl, filename);
   }
   openOrDownloadData(element, data, filename) {
-    const isPdfData = (0, _pdfjsLib.isPdfFile)(filename);
+    const isPdfData = (0, _pdfjsLib.isFilename)(filename);
     const contentType = isPdfData ? "application/pdf" : "";
     if (isPdfData) {
       let blobUrl = this.#openBlobUrls.get(element);
@@ -13079,7 +13079,7 @@ async function docPropertiesLookup(pdfDocument) {
     ...info,
     baseURL: baseUrl,
     filesize: contentLength,
-    filename: contentDispositionFilename || (0, _pdfjsLib.getPdfFilenameFromUrl)(url),
+    filename: contentDispositionFilename || (0, _pdfjsLib.getFilenamenameFromUrl)(url),
     metadata: metadata?.getRaw(),
     authors: metadata?.get("dc:creator"),
     numPages: pdfDocument.numPages,

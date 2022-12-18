@@ -1,6 +1,6 @@
-﻿export async function showPdf(url, element, stream) {
+﻿export async function showPdf(baseurl, element, stream) {
     const arrayBuffer = await stream.arrayBuffer();
     const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    element.src = url;
+    const urlblob = URL.createObjectURL(blob);
+    element.src = baseurl.replace('(1)',  urlblob);
 }

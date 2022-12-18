@@ -18,32 +18,30 @@ public partial class PdfReader : IAsyncDisposable
 {
     [Inject]
     [NotNull]
-    private IJSRuntime? JSRuntime { get; set; }     
+    private IJSRuntime? JSRuntime { get; set; }
 
     [NotNull]
     private IJSObjectReference? Module { get; set; }
-    
-    private DotNetObjectReference<PdfReader>? Instance { get; set; }
 
     private ElementReference Element { get; set; }
 
     /// <summary>
-    /// 获得/设置 文件流
+    /// 获得/设置 用于渲染的文件流,为空则用Filename参数读取文件
     /// </summary>
     [Parameter]
-    public Stream? PdfStream { get; set; }
+    public Stream? Stream { get; set; }
 
     /// <summary>
     /// 获得/设置 PDF文件URL
     /// </summary>
     [Parameter]
-    public string? PdfFile { get; set; }
+    public string? Filename { get; set; }
 
     /// <summary>
     /// 获得/设置 使用流化模式,可跨域读取文件. 默认为 false
     /// </summary>
     [Parameter]
-    public bool EnableStreamingMode { get; set; }
+    public bool StreamMode { get; set; }
 
     /// <summary>
     /// 获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
@@ -61,92 +59,82 @@ public partial class PdfReader : IAsyncDisposable
     /// 获得/设置 高 单位(px|%) 默认 500px
     /// </summary>
     [Parameter]
-    public string Height { get; set; } = "500px";
+    public string Height { get; set; } = "700px";
 
     /// <summary>
-    /// 获得/设置 指定页码,如果浏览器支持，将加载PDF并自动滚动到第n页
+    /// 获得/设置 页码
     /// </summary> 
     [Parameter]
     public int Page { get; set; } = 1;
 
     /// <summary>
-    /// 获得/设置 Navpanes (PDF.js 专有)
+    /// 获得/设置 显示导航窗格
     /// </summary> 
     [Parameter]
     public int Navpanes { get; set; } = 0;
 
     /// <summary>
-    /// 获得/设置 Toolbar (PDF.js 专有)
+    /// 获得/设置 显示工具栏
     /// </summary> 
     [Parameter]
     public int Toolbar { get; set; } = 0;
 
     /// <summary>
-    /// 获得/设置 Statusbar (PDF.js 专有)
+    /// 获得/设置 显示状态栏
     /// </summary> 
     [Parameter]
     public int Statusbar { get; set; } = 0;
 
     /// <summary>
-    /// 视图模式 (PDF.js 专有)
+    /// 获得/设置 视图模式
     /// </summary>
     [Parameter]
     public string? View { get; set; } = "FitV";
 
     /// <summary>
-    /// 页面模式 (PDF.js 专有)
+    /// 获得/设置 页面模式
     /// </summary>
     [Parameter]
     public string? Pagemode { get; set; } = "thumbs";
 
     /// <summary>
-    /// 查询字符串的(PDF.js 专有)
+    /// 获得/设置 查询字符串
     /// </summary>
     [Parameter]
     public string? Search { get; set; }
-    
+
     /// <summary>
-    /// 获得/设置 PDF.js 浏览器页面路径
+    /// 获得/设置 浏览器路径
     /// </summary> 
     [Parameter]
-    public string PDFJS_URL { get; set; } = "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
+    public string ViewerBase { get; set; } = "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
+
     private string? Url { get; set; }
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-            if (firstRender)
-            {
-             Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.PdfReader/app.js");
-             Instance = DotNetObjectReference.Create(this);
-             await Refresh();
-            }
+        if (firstRender)
+        {
+            Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.PdfReader/app.js");
+            await Refresh();
+        }
     }
 
 
 
     public virtual async Task Refresh()
     {
-        if (PdfStream != null)
+        if (Stream != null)
         {
-            await ShowPdf(PdfStream);
+            await ShowPdf(Stream);
         }
-        else if (!string.IsNullOrEmpty(PdfFile))
+        else if (StreamMode && !string.IsNullOrEmpty(Filename))
         {
-            if (!EnableStreamingMode)
-            {
-                var url = $"{PDFJS_URL}#page={Page}&navpanes={Navpanes}&toolbar={Toolbar}&statusbar={Statusbar}&view={View}&pagemode={Pagemode}&search={Search}&file=";
-                Url = $"{url}{UrlBase}{PdfFile}";
-                Url = HttpUtility.UrlEncode(Url);
-                StateHasChanged();
-            }
-            else
-            {
-                var byteArray = await GetImageAsByteArray(PdfFile, UrlBase!);
-                await ShowPdf(new MemoryStream(byteArray));
-            }
-         }
-        
+            var byteArray = await GetImageAsByteArray(Filename, UrlBase!);
+            await ShowPdf(new MemoryStream(byteArray));
+        }
+
     }
 
     /// <summary>
@@ -156,15 +144,15 @@ public partial class PdfReader : IAsyncDisposable
     {
         try
         {
-            var url = $"{PDFJS_URL}#page={Page}&navpanes={Navpanes}&toolbar={Toolbar}&statusbar={Statusbar}&view={View}&pagemode={Pagemode}&search={Search}&file=";
+            var url = $"{ViewerBase}?file=(1)#page={Page}?navpanes={Navpanes}&toolbar={Toolbar}&statusbar={Statusbar}&view={View}&pagemode={Pagemode}&search={Search}";
             using var streamRef = new DotNetStreamReference(stream);
             await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
         }
-        catch 
+        catch
         {
         }
     }
-    
+
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
@@ -172,12 +160,12 @@ public partial class PdfReader : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         if (Module is not null)
-        { 
+        {
             await Module.DisposeAsync();
         }
         GC.SuppressFinalize(this);
     }
-    
+
     static async Task<byte[]> GetImageAsByteArray(string urlImage, string urlBase)
     {
 

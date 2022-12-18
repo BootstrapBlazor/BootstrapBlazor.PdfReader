@@ -175,21 +175,21 @@ class WorkerMessageHandler {
         }
         return pdfManagerCapability.promise;
       }
-      let pdfStream,
+      let Stream,
         cachedChunks = [];
       try {
-        pdfStream = new _worker_stream.PDFWorkerStream(handler);
+        Stream = new _worker_stream.PDFWorkerStream(handler);
       } catch (ex) {
         pdfManagerCapability.reject(ex);
         return pdfManagerCapability.promise;
       }
-      const fullRequest = pdfStream.getFullReader();
+      const fullRequest = Stream.getFullReader();
       fullRequest.headersReady.then(function () {
         if (!fullRequest.isRangeSupported) {
           return;
         }
         disableAutoFetch = disableAutoFetch || fullRequest.isStreamingSupported;
-        newPdfManager = new _pdf_manager.NetworkPdfManager(docId, pdfStream, {
+        newPdfManager = new _pdf_manager.NetworkPdfManager(docId, Stream, {
           msgHandler: handler,
           password,
           length: fullRequest.contentLength,
@@ -208,12 +208,12 @@ class WorkerMessageHandler {
       });
       let loaded = 0;
       const flushChunks = function () {
-        const pdfFile = (0, _util.arraysToBytes)(cachedChunks);
-        if (length && pdfFile.length !== length) {
+        const Filename = (0, _util.arraysToBytes)(cachedChunks);
+        if (length && Filename.length !== length) {
           (0, _util.warn)("reported HTTP length is different from actual");
         }
         try {
-          newPdfManager = new _pdf_manager.LocalPdfManager(docId, pdfFile, password, handler, evaluatorOptions, enableXfa, docBaseUrl);
+          newPdfManager = new _pdf_manager.LocalPdfManager(docId, Filename, password, handler, evaluatorOptions, enableXfa, docBaseUrl);
           pdfManagerCapability.resolve(newPdfManager);
         } catch (ex) {
           pdfManagerCapability.reject(ex);
@@ -257,7 +257,7 @@ class WorkerMessageHandler {
         cancelXHRs = null;
       });
       cancelXHRs = function (reason) {
-        pdfStream.cancelAllRequests(reason);
+        Stream.cancelAllRequests(reason);
       };
       return pdfManagerCapability.promise;
     }

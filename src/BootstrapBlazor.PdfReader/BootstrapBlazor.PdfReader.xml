@@ -9,17 +9,17 @@
             Blazor Pdf Reader PDF阅读器 组件 
             </summary>
         </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.PdfStream">
+        <member name="P:BootstrapBlazor.Components.PdfReader.Stream">
             <summary>
             获得/设置 文件流
             </summary>
         </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.PdfFile">
+        <member name="P:BootstrapBlazor.Components.PdfReader.Filename">
             <summary>
             获得/设置 PDF文件URL
             </summary>
         </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.EnableStreamingMode">
+        <member name="P:BootstrapBlazor.Components.PdfReader.StreamMode">
             <summary>
             获得/设置 使用流化模式,可跨域读取文件. 默认为 false
             </summary>
@@ -46,27 +46,27 @@
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Navpanes">
             <summary>
-            获得/设置 Navpanes (PDF.js 专有)
+            获得/设置 Navpanes
             </summary> 
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Toolbar">
             <summary>
-            获得/设置 Toolbar (PDF.js 专有)
+            获得/设置 Toolbar
             </summary> 
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Statusbar">
             <summary>
-            获得/设置 Statusbar (PDF.js 专有)
+            获得/设置 Statusbar
             </summary> 
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.View">
             <summary>
-            视图模式 (PDF.js 专有)
+            视图模式
             </summary>
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Pagemode">
             <summary>
-            页面模式 (PDF.js 专有)
+            页面模式
             </summary>
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Search">
@@ -74,7 +74,7 @@
             查询字符串的(PDF.js 专有)
             </summary>
         </member>
-        <member name="P:BootstrapBlazor.Components.PdfReader.PDFJS_URL">
+        <member name="P:BootstrapBlazor.Components.PdfReader.ViewerBase">
             <summary>
             获得/设置 PDF.js 浏览器页面路径
             </summary> 

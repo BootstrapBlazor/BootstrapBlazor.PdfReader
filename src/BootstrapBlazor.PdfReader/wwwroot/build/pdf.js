@@ -2142,7 +2142,7 @@ class WorkerTransport {
       loadingTask
     } = this;
     messageHandler.on("GetReader", (data, sink) => {
-      (0, _util.assert)(this._networkStream, "GetReader - no `IPDFStream` instance available.");
+      (0, _util.assert)(this._networkStream, "GetReader - no `IStream` instance available.");
       this._fullReader = this._networkStream.getFullReader();
       this._fullReader.onProgress = evt => {
         this._lastProgress = {
@@ -2199,7 +2199,7 @@ class WorkerTransport {
       return headersCapability.promise;
     });
     messageHandler.on("GetRangeReader", (data, sink) => {
-      (0, _util.assert)(this._networkStream, "GetRangeReader - no `IPDFStream` instance available.");
+      (0, _util.assert)(this._networkStream, "GetRangeReader - no `IStream` instance available.");
       const rangeReader = this._networkStream.getRangeReader(data.begin, data.end);
       if (!rangeReader) {
         sink.close();
@@ -3866,11 +3866,11 @@ exports.getColorValues = getColorValues;
 exports.getCurrentTransform = getCurrentTransform;
 exports.getCurrentTransformInverse = getCurrentTransformInverse;
 exports.getFilenameFromUrl = getFilenameFromUrl;
-exports.getPdfFilenameFromUrl = getPdfFilenameFromUrl;
+exports.getFilenamenameFromUrl = getFilenamenameFromUrl;
 exports.getRGB = getRGB;
 exports.getXfaPageViewport = getXfaPageViewport;
 exports.isDataScheme = isDataScheme;
-exports.isPdfFile = isPdfFile;
+exports.isFilename = isFilename;
 exports.isValidFetchUrl = isValidFetchUrl;
 exports.loadScript = loadScript;
 var _base_factory = __w_pdfjs_require__(7);
@@ -4071,7 +4071,7 @@ function isDataScheme(url) {
   }
   return url.substring(i, i + 5).toLowerCase() === "data:";
 }
-function isPdfFile(filename) {
+function isFilename(filename) {
   return typeof filename === "string" && /\.pdf$/i.test(filename);
 }
 function getFilenameFromUrl(url, onlyStripPath = false) {
@@ -4080,12 +4080,12 @@ function getFilenameFromUrl(url, onlyStripPath = false) {
   }
   return url.substring(url.lastIndexOf("/") + 1);
 }
-function getPdfFilenameFromUrl(url, defaultFilename = "document.pdf") {
+function getFilenamenameFromUrl(url, defaultFilename = "document.pdf") {
   if (typeof url !== "string") {
     return defaultFilename;
   }
   if (isDataScheme(url)) {
-    (0, _util.warn)('getPdfFilenameFromUrl: ignore "data:"-URL for performance reasons.');
+    (0, _util.warn)('getFilenamenameFromUrl: ignore "data:"-URL for performance reasons.');
     return defaultFilename;
   }
   const reURI = /^(?:(?:[^:]+:)?\/\/[^/]+)?([^?#]*)(\?[^#]*)?(#.*)?$/;
@@ -8358,7 +8358,7 @@ class PDFDataTransportStreamReader {
   constructor(stream, queuedChunks, progressiveDone = false, contentDispositionFilename = null) {
     this._stream = stream;
     this._done = progressiveDone || false;
-    this._filename = (0, _display_utils.isPdfFile)(contentDispositionFilename) ? contentDispositionFilename : null;
+    this._filename = (0, _display_utils.isFilename)(contentDispositionFilename) ? contentDispositionFilename : null;
     this._queuedChunks = queuedChunks || [];
     this._loaded = 0;
     for (const chunk of this._queuedChunks) {
@@ -14528,7 +14528,7 @@ function extractFilenameFromHeader(getResponseHeader) {
         filename = decodeURIComponent(filename);
       } catch (ex) {}
     }
-    if ((0, _display_utils.isPdfFile)(filename)) {
+    if ((0, _display_utils.isFilename)(filename)) {
       return filename;
     }
   }
@@ -15527,10 +15527,10 @@ Object.defineProperty(exports, "getFilenameFromUrl", ({
     return _display_utils.getFilenameFromUrl;
   }
 }));
-Object.defineProperty(exports, "getPdfFilenameFromUrl", ({
+Object.defineProperty(exports, "getFilenamenameFromUrl", ({
   enumerable: true,
   get: function () {
-    return _display_utils.getPdfFilenameFromUrl;
+    return _display_utils.getFilenamenameFromUrl;
   }
 }));
 Object.defineProperty(exports, "getXfaPageViewport", ({
@@ -15539,10 +15539,10 @@ Object.defineProperty(exports, "getXfaPageViewport", ({
     return _display_utils.getXfaPageViewport;
   }
 }));
-Object.defineProperty(exports, "isPdfFile", ({
+Object.defineProperty(exports, "isFilename", ({
   enumerable: true,
   get: function () {
-    return _display_utils.isPdfFile;
+    return _display_utils.isFilename;
   }
 }));
 Object.defineProperty(exports, "loadScript", ({

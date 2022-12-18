@@ -1,8 +1,9 @@
 # Blazor Pdf Reader PDF阅读器 组件  
 
-![image](https://user-images.githubusercontent.com/8428709/205808008-b3898c07-3f26-4f88-be5c-7836f8985174.png)
 
 示例:
+
+https://www.blazor.zone/PdfReaders
 
 https://blazor.app1.es/pdfReaders
 
@@ -19,47 +20,45 @@ https://blazor.app1.es/pdfReaders
 
 3.razor页面
 ```
-<PdfReader PdfFile="https://densen.es/test/webdev/pdf/sample.pdf" />
+<PdfReader Filename="https://densen.es/test/webdev/pdf/sample.pdf" />
            
 <PdfReader UrlBase="https://blazor.app1.es/"
-           PdfFile="_content/DemoShared/sample.pdf" />
+           Filename="_content/DemoShared/sample.pdf" />
 
+<pre>流化方式,可跨域</pre>
 <PdfReader UrlBase="https://blazor.app1.es/"
-           PdfFile="_content/DemoShared/sample.pdf" 
-           EnableStreamingMode="true"/>
-
-<pre>跨域最佳体验</pre>
-
-<PdfReader UrlBase="https://blazor.app1.es/"
-           PdfFile="_content/DemoShared/sample.pdf" 
-           EnableStreamingMode="true"
-           ForcePDFJS="true" />
+           Filename="_content/DemoShared/sample.pdf" 
+           StreamMode="true"/> 
 ```
 
-4.参数说明
+4.参数说明 
 
-|  参数   | 说明  | 默认值  | 
+** 7.1 移除pdfobject, 一些参数也被移除,请注意更改 **
+
+|  参数   | 说明  | 默认值  | 旧版名称 |
 |  ----  | ----  | ----  | 
-| PdfStream  | 用于渲染的文件流,为空则用URL参数读取文件 |  | 
-| PdfFile  | PDF文件路径, https://xx.com/sample.pdf | null | 
-| Func<string, Task>? OnInfo | 信息回调 | |
-| Func<string, Task>? OnError | 错误回调 |
-| EnableStreamingMode  | 使用流化模式,可跨域读取文件 | false | 
+| Stream  | 用于渲染的文件流,为空则用URL参数读取文件 |  | PdfStream |
+| Filename  | PDF文件URL | null | 
+| StreamMode  | 使用流化模式,可跨域读取文件 | false | EnableStreamingMode |
 | UrlBase  | PDF文件基础路径, (使用流化模式才需要设置),  https://xx.com |  | 
-| Height  | 高 | 700 | 
-| Page | 指定页码,如果浏览器支持，将加载PDF并自动滚动到第n页 | 1 |
-| ForceIframe | 强制使用 Iframe | false |
-| ForcePDFJS | 强制使用 PDF.js | false |
-| PDFJS_URL | PDF.js 浏览器页面路径 | 内置 |
-| Search | *查询字符串 | |
+| Width  | 宽 单位(px|%) | 100% | 
+| Height  | 高 单位(px|%) | 500px | 
+| Page | 页码 | 1 |
+| Navpanes | 显示导航窗格 | 1 |
+| Toolbar | 显示工具栏 | 1 |
+| Statusbar | 显示状态栏 | 1 |
 | View | *视图模式 | FitV |
 | Pagemode | *页面模式 | thumbs |
+| Search | *查询字符串 | | 
+| ForceIframe | 强制使用 Iframe | false |
+| ForcePDFJS | 强制使用 PDF.js | false |
+| ViewerBase | PDF.js 浏览器页面路径 | 内置 | PDFJS_URL |
 
-*表示PDF.js 专有
-
-**优先嵌入模式,不支持则回落倒pdf.js模式**
-
-**跨域最佳体验:**  EnableStreamingMode=true , ForcePDFJS=true
+| 移除参数 | 
+| Func<string, Task>? OnInfo | 
+| Func<string, Task>? OnError | 
+| ForceIframe | 
+| ForcePDFJS | 
 
 ---
 #### Blazor 组件
@@ -94,9 +93,8 @@ https://blazor.app1.es/pdfReaders
 
 [电池信息/网络信息 WebAPI](https://www.nuget.org/packages/BootstrapBlazor.WebAPI#readme-body-tab)
 
+[视频播放器 VideoPlayer](https://www.nuget.org/packages/BootstrapBlazor.VideoPlayer#readme-body-tab)
+
 #### AlexChow
 
 [今日头条](https://www.toutiao.com/c/user/token/MS4wLjABAAAAGMBzlmgJx0rytwH08AEEY8F0wIVXB2soJXXdUP3ohAE/?) | [博客园](https://www.cnblogs.com/densen2014) | [知乎](https://www.zhihu.com/people/alex-chow-54) | [Gitee](https://gitee.com/densen2014) | [GitHub](https://github.com/densen2014)
-
-
-![ChuanglinZhou](https://user-images.githubusercontent.com/8428709/205942253-8ff5f9ca-a033-4707-9c36-b8c9950e50d6.png)

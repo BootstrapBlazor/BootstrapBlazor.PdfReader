@@ -1,7 +1,6 @@
 ﻿@namespace BootstrapBlazor.Components
 
-@if (!string.IsNullOrEmpty(Url))
-{
-    <iframe @ref="Element"  allow="fullscreen"
-            style="@($"border: none; width: {Width}; height: {Height};")" />
-}
+<iframe @ref="Element"
+        allow="fullscreen"
+        style="@($"border: none; width: {Width}; height: {Height};")"
+        src=@($"{ViewerBase}?file={System.Web.HttpUtility.UrlEncode(Filename)}#page={Page}?navpanes={Navpanes}&toolbar={Toolbar}&statusbar={Statusbar}&view={View}&pagemode={Pagemode}&search={Search}") />
