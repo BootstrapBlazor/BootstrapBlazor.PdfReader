@@ -42,8 +42,8 @@ https://blazor.app1.es/pdfReaders
 | Filename  | PDF文件URL | null | 
 | StreamMode  | 使用流化模式,可跨域读取文件 | false | EnableStreamingMode |
 | UrlBase  | PDF文件基础路径, (使用流化模式才需要设置),  https://xx.com |  | 
-| Width  | 宽 单位(px|%) | 100% | 
-| Height  | 高 单位(px|%) | 500px | 
+| Width  | 宽 单位(px/%) | 100% | 
+| Height  | 高 单位(px/%) | 500px | 
 | Page | 页码 | 1 |
 | Navpanes | 显示导航窗格 | 1 |
 | Toolbar | 显示工具栏 | 1 |
@@ -51,9 +51,7 @@ https://blazor.app1.es/pdfReaders
 | View | *视图模式 | FitV |
 | Pagemode | *页面模式 | thumbs |
 | Search | *查询字符串 | | 
-| ForceIframe | 强制使用 Iframe | false |
-| ForcePDFJS | 强制使用 PDF.js | false |
-| ViewerBase | PDF.js 浏览器页面路径 | 内置 | PDFJS_URL |
+| ViewerBase | 浏览器页面路径 | 内置 | PDFJS_URL |
 
 | 移除参数 | 
 | ----  | 
