@@ -1,5 +1,6 @@
 # Blazor Pdf Reader PDF阅读器 组件  
 
+![QQ截图20221218143438](https://user-images.githubusercontent.com/8428709/208301379-21e3b760-3f80-4941-9deb-1d34728ca2a5.jpg)
 
 示例:
 

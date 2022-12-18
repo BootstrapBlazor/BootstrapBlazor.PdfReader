@@ -11,7 +11,7 @@
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Stream">
             <summary>
-            获得/设置 文件流
+            获得/设置 用于渲染的文件流,为空则用Filename参数读取文件
             </summary>
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Filename">
@@ -41,42 +41,42 @@
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Page">
             <summary>
-            获得/设置 指定页码,如果浏览器支持，将加载PDF并自动滚动到第n页
+            获得/设置 页码
             </summary> 
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Navpanes">
             <summary>
-            获得/设置 Navpanes
+            获得/设置 显示导航窗格
             </summary> 
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Toolbar">
             <summary>
-            获得/设置 Toolbar
+            获得/设置 显示工具栏
             </summary> 
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Statusbar">
             <summary>
-            获得/设置 Statusbar
+            获得/设置 显示状态栏
             </summary> 
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.View">
             <summary>
-            视图模式
+            获得/设置 视图模式
             </summary>
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Pagemode">
             <summary>
-            页面模式
+            获得/设置 页面模式
             </summary>
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Search">
             <summary>
-            查询字符串的(PDF.js 专有)
+            获得/设置 查询字符串
             </summary>
         </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.ViewerBase">
             <summary>
-            获得/设置 PDF.js 浏览器页面路径
+            获得/设置 浏览器路径
             </summary> 
         </member>
         <member name="M:BootstrapBlazor.Components.PdfReader.ShowPdf(System.IO.Stream)">
