@@ -37,7 +37,7 @@ https://blazor.app1.es/pdfReaders
 ** 7.1 移除pdfobject, 一些参数也被移除,请注意更改 **
 
 |  参数   | 说明  | 默认值  | 旧版名称 |
-|  ----  | ----  | ----  | 
+|  ----  | ----  | ----  |  ----  | 
 | Stream  | 用于渲染的文件流,为空则用URL参数读取文件 |  | PdfStream |
 | Filename  | PDF文件URL | null | 
 | StreamMode  | 使用流化模式,可跨域读取文件 | false | EnableStreamingMode |
@@ -56,6 +56,7 @@ https://blazor.app1.es/pdfReaders
 | ViewerBase | PDF.js 浏览器页面路径 | 内置 | PDFJS_URL |
 
 | 移除参数 | 
+| ----  | 
 | Func<string, Task>? OnInfo | 
 | Func<string, Task>? OnError | 
 | ForceIframe | 
