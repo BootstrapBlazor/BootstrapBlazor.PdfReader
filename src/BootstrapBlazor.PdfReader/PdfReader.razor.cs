@@ -7,6 +7,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Intrinsics.Arm;
 using System.Web;
 
 namespace BootstrapBlazor.Components;
@@ -131,7 +132,10 @@ public partial class PdfReader : IAsyncDisposable
         }
         else if (StreamMode && !string.IsNullOrEmpty(Filename))
         {
-            var byteArray = await GetImageAsByteArray(Filename, UrlBase!);
+            var client = new HttpClient();
+            var response = await client.GetAsync(UrlBase ?? "" + Filename);
+
+            var byteArray = await response.Content.ReadAsByteArrayAsync();
             await ShowPdf(new MemoryStream(byteArray));
         }
 
@@ -166,30 +170,6 @@ public partial class PdfReader : IAsyncDisposable
         GC.SuppressFinalize(this);
     }
 
-    static async Task<byte[]> GetImageAsByteArray(string urlImage, string urlBase)
-    {
-
-        var client = new HttpClient();
-        client.BaseAddress = new Uri(urlBase);
-        var response = await client.GetAsync(urlImage);
-
-        return await response.Content.ReadAsByteArrayAsync();
-    }
-
-    static string ConvertToBase64(Stream stream)
-    {
-        if (stream is MemoryStream memoryStream)
-        {
-            return Convert.ToBase64String(memoryStream.ToArray());
-        }
-
-        var bytes = new Byte[(int)stream.Length];
-
-        stream.Seek(0, SeekOrigin.Begin);
-        stream.Read(bytes, 0, (int)stream.Length);
-
-        return Convert.ToBase64String(bytes);
-    }
 
 }
 
