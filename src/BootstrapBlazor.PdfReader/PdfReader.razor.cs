@@ -32,7 +32,7 @@ public partial class PdfReader : IAsyncDisposable
     public Stream? Stream { get; set; }
 
     /// <summary>
-    /// 获得/设置 PDF文件URL
+    /// 获得/设置 PDF文件URL, 'http' 开头自动使用流模式读取
     /// </summary>
     [Parameter]
     public string? Filename { get; set; }
@@ -44,9 +44,10 @@ public partial class PdfReader : IAsyncDisposable
     public bool StreamMode { get; set; }
 
     /// <summary>
-    /// 获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
+    /// [已过时,统一使用 Filename 简化参数] 获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
     /// </summary>
     [Parameter]
+    [Obsolete]
     public string? UrlBase { get; set; }
 
     /// <summary>
@@ -62,6 +63,12 @@ public partial class PdfReader : IAsyncDisposable
     public string Height { get; set; } = "700px";
 
     /// <summary>
+    /// 获得/设置 组件外观 Css Style
+    /// </summary>
+    [Parameter]
+    public string? StyleString { get; set; }
+
+    /// <summary>
     /// 获得/设置 页码
     /// </summary> 
     [Parameter]
@@ -71,31 +78,32 @@ public partial class PdfReader : IAsyncDisposable
     /// 获得/设置 显示导航窗格
     /// </summary> 
     [Parameter]
-    public int Navpanes { get; set; } = 0;
+    public bool Navpanes { get; set; } = true;
 
     /// <summary>
     /// 获得/设置 显示工具栏
     /// </summary> 
     [Parameter]
-    public int Toolbar { get; set; } = 0;
+    public bool Toolbar { get; set; } = true;
 
     /// <summary>
     /// 获得/设置 显示状态栏
     /// </summary> 
     [Parameter]
-    public int Statusbar { get; set; } = 0;
+    public bool Statusbar { get; set; } = true;
 
     /// <summary>
-    /// 获得/设置 视图模式
+    /// [已过时,使用 Zoom 代替] 获得/设置 视图模式, 
     /// </summary>
     [Parameter]
-    public string? View { get; set; } = "FitV";
+    [Obsolete]
+    public string? View { get; set; }
 
     /// <summary>
     /// 获得/设置 页面模式
     /// </summary>
     [Parameter]
-    public string? Pagemode { get; set; } = "thumbs";
+    public EnumPageMode? Pagemode { get; set; } = EnumPageMode.Thumbs;
 
     /// <summary>
     /// 获得/设置 查询字符串
@@ -104,10 +112,25 @@ public partial class PdfReader : IAsyncDisposable
     public string? Search { get; set; }
 
     /// <summary>
+    /// 获得/设置 放大倍率 默认为 空
+    /// </summary>
+    [Parameter]
+    public EnumZoomMode? Zoom { get; set; } = EnumZoomMode.Auto;
+
+    /// <summary>
     /// 获得/设置 浏览器路径
     /// </summary> 
     [Parameter]
     public string ViewerBase { get; set; } = "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
+
+
+    /// <summary>
+    /// Debug
+    /// </summary>
+    [Parameter]
+    public bool Debug { get; set; }
+
+    string? ErrorMessage { get; set; }
 
     private string? Url { get; set; }
 
@@ -123,34 +146,71 @@ public partial class PdfReader : IAsyncDisposable
 
 
 
-    public virtual async Task Refresh()
+    public virtual async Task Refresh(int page = 1)
     {
-        if (Stream != null)
+        ErrorMessage = null;
+        try
         {
-            await ShowPdf(Stream);
+            if (Stream != null)
+            {
+                await ShowPdf(Stream);
+            }
+            else if (!string.IsNullOrEmpty(Filename) && (StreamMode || Filename.StartsWith("http")))
+            {
+                var byteArray = await GetImageAsByteArray(Filename, UrlBase!);
+                await ShowPdf(new MemoryStream(byteArray));
+
+                //var client = new HttpClient();
+                //var stream = await client.GetStreamAsync($"{UrlBase ?? ""}{Filename}");
+                //if (stream != null)
+                //{
+                //    await ShowPdf(stream);
+                //}
+            }
+            else
+            {
+                Page = page;
+                Url = GenUrl();
+            }
+
         }
-        else if (StreamMode && !string.IsNullOrEmpty(Filename))
+        catch (Exception e)
         {
-            var byteArray = await GetImageAsByteArray(Filename, UrlBase!);
-            await ShowPdf(new MemoryStream(byteArray));
+            ErrorMessage = e.Message;
         }
+        StateHasChanged();
 
     }
+
+    private string GenUrl(bool filemode = true) => $"{ViewerBase}?file={(filemode ? HttpUtility.UrlEncode(Filename) : "(1)")}#page={Page}&navpanes={(Navpanes ? 0 : 1)}&toolbar={(Toolbar ? 0 : 1)}&statusbar={(Statusbar ? 0 : 1)}&pagemode={(Pagemode ?? EnumPageMode.Thumbs).ToString().ToLower()}&search={Search}" + (Zoom != null ? $"&zoom={Zoom.GetEnumName()}" : "");
 
     /// <summary>
     /// 打开 stream
     /// </summary>
     public virtual async Task ShowPdf(Stream stream)
     {
-        try
+        Url = GenUrl(false);
+        using var streamRef = new DotNetStreamReference(stream);
+        await Module!.InvokeVoidAsync("showPdf", Url, Element, streamRef);
+    }
+
+    static async Task<byte[]> GetImageAsByteArray(string urlImage, string urlBase)
+    {
+        var client = new HttpClient();
+        var response = await client.GetAsync(new Uri(urlBase + urlImage));
+        return await response.Content.ReadAsByteArrayAsync();
+    }
+
+    static string ConvertToBase64(Stream stream)
+    {
+        if (stream is MemoryStream memoryStream)
         {
-            var url = $"{ViewerBase}?file=(1)#page={Page}?navpanes={Navpanes}&toolbar={Toolbar}&statusbar={Statusbar}&view={View}&pagemode={Pagemode}&search={Search}";
-            using var streamRef = new DotNetStreamReference(stream);
-            await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
+            return Convert.ToBase64String(memoryStream.ToArray());
         }
-        catch
-        {
-        }
+        var bytes = new Byte[(int)stream.Length];
+        stream.Seek(0, SeekOrigin.Begin);
+        stream.Read(bytes, 0, (int)stream.Length);
+        return Convert.ToBase64String(bytes);
     }
 
     /// <summary>
@@ -165,32 +225,6 @@ public partial class PdfReader : IAsyncDisposable
         }
         GC.SuppressFinalize(this);
     }
-
-    static async Task<byte[]> GetImageAsByteArray(string urlImage, string urlBase)
-    {
-
-        var client = new HttpClient();
-        client.BaseAddress = new Uri(urlBase);
-        var response = await client.GetAsync(urlImage);
-
-        return await response.Content.ReadAsByteArrayAsync();
-    }
-
-    static string ConvertToBase64(Stream stream)
-    {
-        if (stream is MemoryStream memoryStream)
-        {
-            return Convert.ToBase64String(memoryStream.ToArray());
-        }
-
-        var bytes = new Byte[(int)stream.Length];
-
-        stream.Seek(0, SeekOrigin.Begin);
-        stream.Read(bytes, 0, (int)stream.Length);
-
-        return Convert.ToBase64String(bytes);
-    }
-
 }
 
 
