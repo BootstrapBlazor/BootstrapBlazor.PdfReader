@@ -133,10 +133,10 @@ public partial class PdfReader : IAsyncDisposable
         else if (StreamMode && !string.IsNullOrEmpty(Filename))
         {
             var client = new HttpClient();
-            var response = await client.GetAsync(UrlBase ?? "" + Filename);
-
-            var byteArray = await response.Content.ReadAsByteArrayAsync();
-            await ShowPdf(new MemoryStream(byteArray));
+            //var response = await client.GetAsync(UrlBase ?? "" + Filename);
+            //var stream = await response.Content.ReadAsStreamAsync();
+            var stream = await client.GetStreamAsync(UrlBase ?? "" + Filename);
+            await ShowPdf(stream);
         }
 
     }
