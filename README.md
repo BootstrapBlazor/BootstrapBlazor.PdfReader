@@ -35,7 +35,7 @@ https://blazor.app1.es/pdfReaders
 
 |  参数   | 说明  | 默认值  | 旧版名称 |
 |  ----  | ----  | ----  |  ----  | 
-| Filename  | PDF文件URL | null | 
+| Filename  | PDF文件路径(Url或相对路径) | null | 
 | StreamMode  | 使用流化模式,可跨域读取文件 | false | EnableStreamingMode |
 | Width  | 宽 单位(px/%) | 100% | 
 | Height  | 高 单位(px/%) | 500px | 
@@ -44,16 +44,16 @@ https://blazor.app1.es/pdfReaders
 | Pagemode | 页面模式, EnumPageMode 类型 | Thumbs |
 | Zoom | 缩放模式, EnumZoomMode 类型 | Auto |
 | Search | 查询字符串 | | 
-| Task Refresh() | 刷新组件 | |
-| Task NavigateToPage(int page) | 跳转页码 | |
-| Task Refresh(int page) | 跳转页码 | |
+| Refresh() | 刷新组件 | |
+| NavigateToPage(int page) | 跳转页码 | |
+| Refresh(int page) | 跳转页码 | |
 | Refresh(string? search, int? page, EnumPageMode? pagemode, EnumZoomMode? zoom) | 刷新组件(查询关键字,页码,页面模式,缩放模式) | |
 | Stream  | 用于渲染的文件流,为空则用URL参数读取文件 |  | PdfStream |
 | ViewerBase | 浏览器页面路径 | 内置 | PDFJS_URL |
 | Navpanes | 显示导航窗格 | true |
 | Toolbar | 显示工具栏 | true |
 | Statusbar | 显示状态栏 | true |
-| Debug | 调试 | | 
+| Debug | 显示调试信息 | | 
 
 ** 7.1.3 移除pdfobject, 一些参数也被移除,请注意更改 **
 
