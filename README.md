@@ -21,37 +21,48 @@ https://blazor.app1.es/pdfReaders
 
 3.razor页面
 ```
-<PdfReader Filename="https://densen.es/test/webdev/pdf/sample.pdf" />
+<PdfReader Filename="pdf/sample.pdf" />
            
-<PdfReader UrlBase="https://blazor.app1.es/"
-           Filename="_content/DemoShared/sample.pdf" />
+<PdfReader Filename="https://blazor.app1.es/_content/DemoShared/sample.pdf" />
 
 <pre>流化方式,可跨域</pre>
-<PdfReader UrlBase="https://blazor.app1.es/"
-           Filename="_content/DemoShared/sample.pdf" 
+<PdfReader Filename="https://densen.es/test/webdev/pdf/sample.pdf" 
            StreamMode="true"/> 
 ```
 
 4.参数说明 
 
-** 7.1 移除pdfobject, 一些参数也被移除,请注意更改 **
 
 |  参数   | 说明  | 默认值  | 旧版名称 |
 |  ----  | ----  | ----  |  ----  | 
-| Stream  | 用于渲染的文件流,为空则用URL参数读取文件 |  | PdfStream |
 | Filename  | PDF文件URL | null | 
 | StreamMode  | 使用流化模式,可跨域读取文件 | false | EnableStreamingMode |
-| UrlBase  | PDF文件基础路径, (使用流化模式才需要设置),  https://xx.com |  | 
 | Width  | 宽 单位(px/%) | 100% | 
 | Height  | 高 单位(px/%) | 500px | 
+| StyleString  | 组件外观 Css Style |  | 
 | Page | 页码 | 1 |
-| Navpanes | 显示导航窗格 | 1 |
-| Toolbar | 显示工具栏 | 1 |
-| Statusbar | 显示状态栏 | 1 |
-| View | *视图模式 | FitV |
-| Pagemode | *页面模式 | thumbs |
-| Search | *查询字符串 | | 
+| Pagemode | 页面模式, EnumPageMode 类型 | Thumbs |
+| Zoom | 缩放模式, EnumZoomMode 类型 | Auto |
+| Search | 查询字符串 | | 
+| Task Refresh() | 刷新组件 | |
+| Task NavigateToPage(int page) | 跳转页码 | |
+| Task Refresh(int page) | 跳转页码 | |
+| Refresh(string? search, int? page, EnumPageMode? pagemode, EnumZoomMode? zoom) | 刷新组件(查询关键字,页码,页面模式,缩放模式) | |
+| Stream  | 用于渲染的文件流,为空则用URL参数读取文件 |  | PdfStream |
 | ViewerBase | 浏览器页面路径 | 内置 | PDFJS_URL |
+| Navpanes | 显示导航窗格 | true |
+| Toolbar | 显示工具栏 | true |
+| Statusbar | 显示状态栏 | true |
+| Debug | 调试 | | 
+
+** 7.1.3 移除pdfobject, 一些参数也被移除,请注意更改 **
+
+| 移除参数 | 
+| ----  | 
+| UrlBase | 
+| View |
+
+** 7.1 移除pdfobject, 一些参数也被移除,请注意更改 **
 
 | 移除参数 | 
 | ----  | 
@@ -59,6 +70,8 @@ https://blazor.app1.es/pdfReaders
 | Func<string, Task>? OnError | 
 | ForceIframe | 
 | ForcePDFJS | 
+| UrlBase | 
+| View |
 
 ---
 #### Blazor 组件

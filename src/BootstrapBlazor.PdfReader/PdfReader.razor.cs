@@ -33,7 +33,7 @@ public partial class PdfReader : IAsyncDisposable
     public Stream? Stream { get; set; }
 
     /// <summary>
-    /// 获得/设置 PDF文件URL
+    /// 获得/设置 PDF文件URL, 'http' 开头自动使用流模式读取
     /// </summary>
     [Parameter]
     public string? Filename { get; set; }
@@ -45,9 +45,10 @@ public partial class PdfReader : IAsyncDisposable
     public bool StreamMode { get; set; }
 
     /// <summary>
-    /// 获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
+    /// [已过时,统一使用 Filename 简化参数] 获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
     /// </summary>
     [Parameter]
+    [Obsolete]
     public string? UrlBase { get; set; }
 
     /// <summary>
@@ -63,6 +64,12 @@ public partial class PdfReader : IAsyncDisposable
     public string Height { get; set; } = "700px";
 
     /// <summary>
+    /// 获得/设置 组件外观 Css Style
+    /// </summary>
+    [Parameter]
+    public string? StyleString { get; set; }
+
+    /// <summary>
     /// 获得/设置 页码
     /// </summary> 
     [Parameter]
@@ -72,37 +79,44 @@ public partial class PdfReader : IAsyncDisposable
     /// 获得/设置 显示导航窗格
     /// </summary> 
     [Parameter]
-    public int Navpanes { get; set; } = 0;
+    public bool Navpanes { get; set; } = true;
 
     /// <summary>
     /// 获得/设置 显示工具栏
     /// </summary> 
     [Parameter]
-    public int Toolbar { get; set; } = 0;
+    public bool Toolbar { get; set; } = true;
 
     /// <summary>
     /// 获得/设置 显示状态栏
     /// </summary> 
     [Parameter]
-    public int Statusbar { get; set; } = 0;
+    public bool Statusbar { get; set; } = true;
 
     /// <summary>
-    /// 获得/设置 视图模式
+    /// [已过时,使用 Zoom 代替] 获得/设置 视图模式, 
     /// </summary>
     [Parameter]
-    public string? View { get; set; } = "FitV";
+    [Obsolete]
+    public string? View { get; set; }
 
     /// <summary>
     /// 获得/设置 页面模式
     /// </summary>
     [Parameter]
-    public string? Pagemode { get; set; } = "thumbs";
+    public EnumPageMode? Pagemode { get; set; } = EnumPageMode.Thumbs;
 
     /// <summary>
-    /// 获得/设置 查询字符串
+    /// 获得/设置 查询关键字
     /// </summary>
     [Parameter]
     public string? Search { get; set; }
+
+    /// <summary>
+    /// 获得/设置 缩放模式 默认为 自动
+    /// </summary>
+    [Parameter]
+    public EnumZoomMode? Zoom { get; set; } = EnumZoomMode.Auto;
 
     /// <summary>
     /// 获得/设置 浏览器路径
@@ -110,7 +124,17 @@ public partial class PdfReader : IAsyncDisposable
     [Parameter]
     public string ViewerBase { get; set; } = "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
 
+
+    /// <summary>
+    /// Debug
+    /// </summary>
+    [Parameter]
+    public bool Debug { get; set; }
+
+    string? ErrorMessage { get; set; }
+
     private string? Url { get; set; }
+    private string? UrlDebug { get; set; }
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -122,39 +146,88 @@ public partial class PdfReader : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// 刷新组件
+    /// </summary>
+    /// <returns></returns>
+    public virtual async Task Refresh() => await Refresh(null,null,null,null);
 
+    /// <summary>
+    /// 跳转页码
+    /// </summary>
+    /// <param name="page">页码</param>
+    /// <returns></returns>
+    public virtual async Task NavigateToPage(int page) => await Refresh(page:page);
 
-    public virtual async Task Refresh()
+    /// <summary>
+    /// 刷新组件
+    /// </summary>
+    /// <param name="page">页码</param>
+    /// <returns></returns>
+    public virtual async Task Refresh(int page) => await Refresh(page:page);
+
+    /// <summary>
+    /// 刷新组件
+    /// </summary>
+    /// <param name="search">查询关键字</param>
+    /// <param name="page">页码</param>
+    /// <param name="pagemode">页面模式</param>
+    /// <param name="zoom">缩放模式</param>
+    /// <returns></returns>
+    public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null)
     {
-        if (Stream != null)
+        ErrorMessage = null;
+        try
         {
-            await ShowPdf(Stream);
+            Search= search ?? Search;
+            Page = page?? Page;
+            Pagemode = pagemode?? Pagemode;
+            Zoom = zoom ?? Zoom;
+
+            if (Stream != null)
+            {
+                await ShowPdf(Stream);
+            }
+            else if (!string.IsNullOrEmpty(Filename) && StreamMode) //|| Filename.StartsWith("http")
+            {
+                var client = new HttpClient();
+                var stream = await client.GetStreamAsync(UrlBase ?? "" + Filename);
+                if (stream != null)
+                {
+                    await ShowPdf(stream);
+                }
+                else
+                {
+                    ErrorMessage = "No data";
+                }
+            }
+            else
+            {
+                Url = GenUrl();
+            }
+
         }
-        else if (StreamMode && !string.IsNullOrEmpty(Filename))
+        catch (Exception e)
         {
-            var client = new HttpClient();
-            //var response = await client.GetAsync(UrlBase ?? "" + Filename);
-            //var stream = await response.Content.ReadAsStreamAsync();
-            var stream = await client.GetStreamAsync(UrlBase ?? "" + Filename);
-            await ShowPdf(stream);
+            ErrorMessage = e.Message;
         }
+        StateHasChanged();
 
     }
+
+    private string GenUrl(bool filemode = true) => $"{ViewerBase}?file={(filemode ? HttpUtility.UrlEncode(Filename) : "(1)")}#page={Page}&navpanes={(Navpanes ? 0 : 1)}&toolbar={(Toolbar ? 0 : 1)}&statusbar={(Statusbar ? 0 : 1)}&pagemode={(Pagemode ?? EnumPageMode.Thumbs).ToString().ToLower()}&search={Search}" + (Zoom != null ? $"&zoom={Zoom.GetEnumName()}" : "");
+ 
 
     /// <summary>
     /// 打开 stream
     /// </summary>
     public virtual async Task ShowPdf(Stream stream)
     {
-        try
-        {
-            var url = $"{ViewerBase}?file=(1)#page={Page}?navpanes={Navpanes}&toolbar={Toolbar}&statusbar={Statusbar}&view={View}&pagemode={Pagemode}&search={Search}";
-            using var streamRef = new DotNetStreamReference(stream);
-            await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
-        }
-        catch
-        {
-        }
+        Url = null;
+        var url = GenUrl(false);
+        UrlDebug= url;
+        using var streamRef = new DotNetStreamReference(stream);
+        await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
     }
 
     /// <summary>
