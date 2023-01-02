@@ -124,6 +124,17 @@ public partial class PdfReader : IAsyncDisposable
     [Parameter]
     public string ViewerBase { get; set; } = "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
 
+    /// <summary>
+    /// 获得/设置 禁用复制/打印/下载
+    /// </summary> 
+    [Parameter]
+    public bool ReadOnly { get; set; }     
+
+    /// <summary>
+    /// 获得/设置 水印内容
+    /// </summary> 
+    [Parameter]
+    public string? Watermark { get; set; } 
 
     /// <summary>
     /// Debug
@@ -173,17 +184,24 @@ public partial class PdfReader : IAsyncDisposable
     /// <param name="page">页码</param>
     /// <param name="pagemode">页面模式</param>
     /// <param name="zoom">缩放模式</param>
+    /// <param name="readOnly">禁用复制/打印/下载</param>
+    /// <param name="watermark">水印内容</param>
     /// <returns></returns>
-    public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null)
+    public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null, bool? readOnly= null, string? watermark = null)
     {
         ErrorMessage = null;
         try
         {
-            Search= search ?? Search;
-            Page = page?? Page;
-            Pagemode = pagemode?? Pagemode;
+            Search = search ?? Search;
+            Page = page ?? Page;
+            Pagemode = pagemode ?? Pagemode;
             Zoom = zoom ?? Zoom;
-
+            ReadOnly = readOnly ?? ReadOnly;
+            Watermark = watermark ?? Watermark;
+            if (ReadOnly)
+            {
+                ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
+            }
             if (Stream != null)
             {
                 await ShowPdf(Stream);
@@ -211,11 +229,12 @@ public partial class PdfReader : IAsyncDisposable
         {
             ErrorMessage = e.Message;
         }
+            if (!string.IsNullOrEmpty (Watermark)) await Module!.InvokeVoidAsync("setWatermark", Watermark, Element);
         StateHasChanged();
 
     }
 
-    private string GenUrl(bool filemode = true) => $"{ViewerBase}?file={(filemode ? HttpUtility.UrlEncode(Filename) : "(1)")}#page={Page}&navpanes={(Navpanes ? 0 : 1)}&toolbar={(Toolbar ? 0 : 1)}&statusbar={(Statusbar ? 0 : 1)}&pagemode={(Pagemode ?? EnumPageMode.Thumbs).ToString().ToLower()}&search={Search}" + (Zoom != null ? $"&zoom={Zoom.GetEnumName()}" : "");
+    private string GenUrl(bool filemode = true) => $"{ViewerBase}?file={(filemode ? HttpUtility.UrlEncode(Filename) : "(1)")}#page={Page}&navpanes={(Navpanes ? 0 : 1)}&toolbar={(Toolbar ? 0 : 1)}&statusbar={(Statusbar ? 0 : 1)}&pagemode={(Pagemode ?? EnumPageMode.Thumbs).ToString().ToLower()}&search={Search}" + (Zoom != null ? $"&zoom={Zoom.GetEnumName()}" : "") + (Watermark != null ? $"&wm={Watermark}" : "");
  
 
     /// <summary>

@@ -531,7 +531,7 @@
             }
 
             /***/
-}),
+        }),
 /* 2 */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -819,7 +819,7 @@
             exports.AppOptions = AppOptions;
 
             /***/
-}),
+        }),
 /* 3 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -895,7 +895,6 @@
                     this.pdfDocument = null;
                     this.pdfViewer = null;
                     this.pdfHistory = null;
-                    this.watermark = null;
                 }
                 setDocument(pdfDocument, baseUrl = null) {
                     this.baseUrl = baseUrl;
@@ -1036,10 +1035,6 @@
                                 query: params.get("search").replace(/"/g, ""),
                                 phraseSearch: params.get("phrase") === "true"
                             });
-                        }
-                        if (params.has("wm")) {
-                            this.watermark = params.get("wm");
-                            console.log("Watermark: " + this.watermark);
                         }
                         if (params.has("page")) {
                             pageNumber = params.get("page") | 0 || 1;
@@ -1286,7 +1281,7 @@
             exports.SimpleLinkService = SimpleLinkService;
 
             /***/
-}),
+        }),
 /* 4 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2537,8 +2532,8 @@
                     eventBus._on("presentationmode", webViewerPresentationMode);
                     eventBus._on("switchannotationeditormode", webViewerSwitchAnnotationEditorMode);
                     eventBus._on("switchannotationeditorparams", webViewerSwitchAnnotationEditorParams);
-                    eventBus._on("print", webViewerPrint);
-                    eventBus._on("download", webViewerDownload);
+                    //eventBus._on("print", webViewerPrint);
+                    //eventBus._on("download", webViewerDownload);
                     eventBus._on("firstpage", webViewerFirstPage);
                     eventBus._on("lastpage", webViewerLastPage);
                     eventBus._on("nextpage", webViewerNextPage);
@@ -2565,7 +2560,7 @@
                         eventBus._on("pagechanging", _boundEvents.reportPageStatsPDFBug);
                     }
                     eventBus._on("fileinputchange", webViewerFileInputChange);
-                    eventBus._on("openfile", webViewerOpenFile);
+                    //eventBus._on("openfile", webViewerOpenFile);
                 },
                 bindWindowEvents() {
                     const {
@@ -2647,8 +2642,8 @@
                     eventBus._off("namedaction", webViewerNamedAction);
                     eventBus._off("presentationmodechanged", webViewerPresentationModeChanged);
                     eventBus._off("presentationmode", webViewerPresentationMode);
-                    eventBus._off("print", webViewerPrint);
-                    eventBus._off("download", webViewerDownload);
+                    // eventBus._off("print", webViewerPrint);
+                    //eventBus._off("download", webViewerDownload);
                     eventBus._off("firstpage", webViewerFirstPage);
                     eventBus._off("lastpage", webViewerLastPage);
                     eventBus._off("nextpage", webViewerNextPage);
@@ -2675,7 +2670,7 @@
                         _boundEvents.reportPageStatsPDFBug = null;
                     }
                     eventBus._off("fileinputchange", webViewerFileInputChange);
-                    eventBus._off("openfile", webViewerOpenFile);
+                    //eventBus._off("openfile", webViewerOpenFile);
                     _boundEvents.beforePrint = null;
                     _boundEvents.afterPrint = null;
                 },
@@ -3022,10 +3017,10 @@
                 PDFViewerApplication.pdfViewer.annotationEditorParams = evt;
             }
             function webViewerPrint() {
-                PDFViewerApplication.triggerPrinting();
+                //PDFViewerApplication.triggerPrinting();
             }
             function webViewerDownload() {
-                PDFViewerApplication.downloadOrSave();
+                //PDFViewerApplication.downloadOrSave();
             }
             function webViewerFirstPage() {
                 if (PDFViewerApplication.pdfDocument) {
@@ -3297,16 +3292,16 @@
                 if (cmd === 1 || cmd === 8) {
                     switch (evt.keyCode) {
                         case 83:
-                            eventBus.dispatch("download", {
-                                source: window
-                            });
+                            //eventBus.dispatch("download", {
+                            //  source: window
+                            //});
                             handled = true;
                             break;
                         case 79:
                             {
-                                eventBus.dispatch("openfile", {
-                                    source: window
-                                });
+                                //eventBus.dispatch("openfile", {
+                                //  source: window
+                                //});
                                 handled = true;
                             }
                             break;
@@ -3483,7 +3478,7 @@
             exports.PDFPrintServiceFactory = PDFPrintServiceFactory;
 
             /***/
-}),
+        }),
 /* 5 */
 /***/ ((module) => {
 
@@ -3498,7 +3493,7 @@
             module.exports = pdfjsLib;
 
             /***/
-}),
+        }),
 /* 6 */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -3615,7 +3610,7 @@
             exports.AutomationEventBus = AutomationEventBus;
 
             /***/
-}),
+        }),
 /* 7 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -3744,7 +3739,7 @@
             exports.PDFCursorTools = PDFCursorTools;
 
             /***/
-}),
+        }),
 /* 8 */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -3858,7 +3853,7 @@
             exports.GrabToPan = GrabToPan;
 
             /***/
-}),
+        }),
 /* 9 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -3942,7 +3937,7 @@
             exports.AnnotationEditorParams = AnnotationEditorParams;
 
             /***/
-}),
+        }),
 /* 10 */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -4009,7 +4004,7 @@
             exports.OverlayManager = OverlayManager;
 
             /***/
-}),
+        }),
 /* 11 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -4095,7 +4090,7 @@
             exports.PasswordPrompt = PasswordPrompt;
 
             /***/
-}),
+        }),
 /* 12 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -4214,7 +4209,7 @@
             exports.PDFAttachmentViewer = PDFAttachmentViewer;
 
             /***/
-}),
+        }),
 /* 13 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -4317,7 +4312,7 @@
             exports.BaseTreeViewer = BaseTreeViewer;
 
             /***/
-}),
+        }),
 /* 14 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -4532,7 +4527,7 @@
             exports.PDFDocumentProperties = PDFDocumentProperties;
 
             /***/
-}),
+        }),
 /* 15 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -4709,7 +4704,7 @@
             exports.PDFFindBar = PDFFindBar;
 
             /***/
-}),
+        }),
 /* 16 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -5391,7 +5386,7 @@
             exports.PDFFindController = PDFFindController;
 
             /***/
-}),
+        }),
 /* 17 */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -5472,7 +5467,7 @@
             }
 
             /***/
-}),
+        }),
 /* 18 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -5952,7 +5947,7 @@
             }
 
             /***/
-}),
+        }),
 /* 19 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -6119,7 +6114,7 @@
             exports.PDFLayerViewer = PDFLayerViewer;
 
             /***/
-}),
+        }),
 /* 20 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -6406,7 +6401,7 @@
             exports.PDFOutlineViewer = PDFOutlineViewer;
 
             /***/
-}),
+        }),
 /* 21 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -6697,7 +6692,7 @@
             exports.PDFPresentationMode = PDFPresentationMode;
 
             /***/
-}),
+        }),
 /* 22 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -6807,7 +6802,7 @@
                             break;
                         case _ui_utils.RenderingStates.INITIAL:
                             this.highestPriorityPage = view.renderingId;
-                            view.draw(view.watermark).finally(() => {
+                            view.draw().finally(() => {
                                 this.renderHighestPriority();
                             }).catch(reason => {
                                 if (reason instanceof _pdfjsLib.RenderingCancelledException) {
@@ -6823,7 +6818,7 @@
             exports.PDFRenderingQueue = PDFRenderingQueue;
 
             /***/
-}),
+        }),
 /* 23 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -7038,10 +7033,10 @@
                                 this._pdfViewer.currentPageNumber = value + 1;
                                 break;
                             case "print":
-                                await this._pdfViewer.pagesPromise;
-                                this._eventBus.dispatch("print", {
-                                    source: this
-                                });
+                                //await this._pdfViewer.pagesPromise;
+                                //this._eventBus.dispatch("print", {
+                                //  source: this
+                                //});
                                 break;
                             case "println":
                                 console.log(value);
@@ -7053,9 +7048,9 @@
                                 this._pdfViewer.currentScaleValue = value;
                                 break;
                             case "SaveAs":
-                                this._eventBus.dispatch("download", {
-                                    source: this
-                                });
+                                //this._eventBus.dispatch("download", {
+                                //  source: this
+                                //});
                                 break;
                             case "FirstPage":
                                 this._pdfViewer.currentPageNumber = 1;
@@ -7209,7 +7204,7 @@
             exports.PDFScriptingManager = PDFScriptingManager;
 
             /***/
-}),
+        }),
 /* 24 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -7494,7 +7489,7 @@
             exports.PDFSidebar = PDFSidebar;
 
             /***/
-}),
+        }),
 /* 25 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -7600,7 +7595,7 @@
             exports.PDFSidebarResizer = PDFSidebarResizer;
 
             /***/
-}),
+        }),
 /* 26 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -7824,7 +7819,7 @@
             exports.PDFThumbnailViewer = PDFThumbnailViewer;
 
             /***/
-}),
+        }),
 /* 27 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -8150,7 +8145,7 @@
             exports.PDFThumbnailView = PDFThumbnailView;
 
             /***/
-}),
+        }),
 /* 28 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -9628,7 +9623,7 @@
             exports.PDFViewer = PDFViewer;
 
             /***/
-}),
+        }),
 /* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -9719,7 +9714,7 @@
             exports.AnnotationEditorLayerBuilder = AnnotationEditorLayerBuilder;
 
             /***/
-}),
+        }),
 /* 30 */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -9835,7 +9830,7 @@
             exports.NullL10n = NullL10n;
 
             /***/
-}),
+        }),
 /* 31 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -9968,7 +9963,7 @@
             exports.AnnotationLayerBuilder = AnnotationLayerBuilder;
 
             /***/
-}),
+        }),
 /* 32 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -10404,7 +10399,7 @@
                 toggleLoadingIconSpinner(viewVisible = false) {
                     this.loadingIconDiv?.classList.toggle("notVisible", !viewVisible);
                 }
-                draw(watermark) {
+                draw() {
                     if (this.renderingState !== _ui_utils.RenderingStates.INITIAL) {
                         console.error("Must be in new state before drawing");
                         this.reset();
@@ -10444,32 +10439,31 @@
                         } else {
                             div.append(textLayerDiv);
                         }
-
-
+                        
                         //从这里开始 
                         let watermark = document.getElementById("watermark");
                         if (watermark !== null && watermark !== undefined && watermark.value !== null) {
-                            console.log('watermark',watermark.value);
+                            console.log('watermark', watermark.value);
                             var cover = document.createElement('div');
                             cover.className = "cover";
                             cover.style.height = canvasWrapper.style.width;  // 其实，cover对象只有1个，直接设置尺寸，避免后面代码重新设置
                             cover.style.height = canvasWrapper.style.height;
 
                             var defaultSettings = {
-                                watermark_txt: watermark.value,
-                                watermark_x: 0,//水印起始位置x轴坐标，左上角是 ( x=0, y=0)， 右是正，下是正。
-                                watermark_y: 0,//水印起始位置Y轴坐标
-                                watermark_rows: 30,    //水印行数              行数要多些，避免下半段没有水印
-                                watermark_cols: 30,  //水印列数
-                                watermark_x_space: 100,//水印x轴间隔
-                                watermark_y_space: 100,//水印y轴间隔
-                                watermark_color: 'grey',//水印字体颜色
-                                watermark_alpha: 0.2,//水印透明度 
-                                watermark_fontsize: '18px',//水印字体大小    可以参考office的字号选项
+                                watermark_txt: "xxxxxxxx中心" + watermark.value,
+                                watermark_x: 80,//水印起始位置x轴坐标，左上角是 ( x=0, y=0)， 右是正，下是正。
+                                watermark_y: 200,//水印起始位置Y轴坐标
+                                watermark_rows: 5,    //水印行数              行数要多些，避免下半段没有水印
+                                watermark_cols: 5,  //水印列数
+                                watermark_x_space: 400,//水印x轴间隔
+                                watermark_y_space: 400,//水印y轴间隔
+                                watermark_color: 'red',//水印字体颜色
+                                watermark_alpha: 0.05,//水印透明度 
+                                watermark_fontsize: '48px',//水印字体大小    可以参考office的字号选项
                                 watermark_font: '微软雅黑',//水印字体
-                                watermark_width: 120,//水印宽度
-                                watermark_height: 60,//水印高度
-                                watermark_angle: 40//水印倾斜度数
+                                watermark_width: 220,//水印宽度
+                                watermark_height: 100,//水印高度
+                                watermark_angle: 30//水印倾斜度数
                             };
 
                             var oTemp = document.createDocumentFragment();
@@ -10820,7 +10814,7 @@
             exports.PDFPageView = PDFPageView;
 
             /***/
-}),
+        }),
 /* 33 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -10979,7 +10973,7 @@
             exports.TextAccessibilityManager = TextAccessibilityManager;
 
             /***/
-}),
+        }),
 /* 34 */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -11085,7 +11079,7 @@
             exports.StructTreeLayerBuilder = StructTreeLayerBuilder;
 
             /***/
-}),
+        }),
 /* 35 */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -11308,7 +11302,7 @@
             exports.TextHighlighter = TextHighlighter;
 
             /***/
-}),
+        }),
 /* 36 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -11423,7 +11417,7 @@
             exports.TextLayerBuilder = TextLayerBuilder;
 
             /***/
-}),
+        }),
 /* 37 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -11508,7 +11502,7 @@
             exports.XfaLayerBuilder = XfaLayerBuilder;
 
             /***/
-}),
+        }),
 /* 38 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -11813,7 +11807,7 @@
             exports.SecondaryToolbar = SecondaryToolbar;
 
             /***/
-}),
+        }),
 /* 39 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -12109,7 +12103,7 @@
             exports.Toolbar = Toolbar;
 
             /***/
-}),
+        }),
 /* 40 */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -12187,7 +12181,7 @@
             exports.ViewHistory = ViewHistory;
 
             /***/
-}),
+        }),
 /* 41 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -12234,7 +12228,7 @@
             _app.PDFViewerApplication.externalServices = GenericExternalServices;
 
             /***/
-}),
+        }),
 /* 42 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -12354,7 +12348,7 @@
             exports.BasePreferences = BasePreferences;
 
             /***/
-}),
+        }),
 /* 43 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -12428,7 +12422,7 @@
             exports.DownloadManager = DownloadManager;
 
             /***/
-}),
+        }),
 /* 44 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -12470,7 +12464,7 @@
             exports.GenericL10n = GenericL10n;
 
             /***/
-}),
+        }),
 /* 45 */
 /***/ (() => {
 
@@ -13196,7 +13190,7 @@
             }(window, document);
 
             /***/
-}),
+        }),
 /* 46 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -13256,7 +13250,7 @@
             exports.GenericScripting = GenericScripting;
 
             /***/
-}),
+        }),
 /* 47 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -13506,7 +13500,7 @@
             };
 
             /***/
-}),
+        }),
 /* 48 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -13542,7 +13536,7 @@
             }
 
             /***/
-})
+        })
 /******/]);
 /************************************************************************/
 /******/ 	// The module cache
@@ -13555,14 +13549,14 @@
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
             /******/
-}
+        }
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
             /******/
-};
+        };
 /******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
@@ -13570,7 +13564,7 @@
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
         /******/
-}
+    }
     /******/
     /************************************************************************/
     var __webpack_exports__ = {};

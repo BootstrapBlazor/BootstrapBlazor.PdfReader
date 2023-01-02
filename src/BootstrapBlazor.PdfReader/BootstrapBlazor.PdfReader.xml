@@ -39,6 +39,26 @@
             缩放模式
             </summary>
         </member>
+        <member name="F:BootstrapBlazor.Components.EnumZoomMode.Auto">
+            <summary>
+            自动缩放
+            </summary>
+        </member>
+        <member name="F:BootstrapBlazor.Components.EnumZoomMode.PageActual">
+            <summary>
+            实际大小
+            </summary>
+        </member>
+        <member name="F:BootstrapBlazor.Components.EnumZoomMode.PageFit">
+            <summary>
+            适合页面
+            </summary>
+        </member>
+        <member name="F:BootstrapBlazor.Components.EnumZoomMode.PageWidth">
+            <summary>
+            适合页宽
+            </summary>
+        </member>
         <member name="T:BootstrapBlazor.Components.EnumExtensions">
             <summary>
             Enum 扩展方法
@@ -136,6 +156,16 @@
             获得/设置 浏览器路径
             </summary> 
         </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.ReadOnly">
+            <summary>
+            获得/设置 禁用复制/打印/下载
+            </summary> 
+        </member>
+        <member name="P:BootstrapBlazor.Components.PdfReader.Watermark">
+            <summary>
+            获得/设置 水印内容
+            </summary> 
+        </member>
         <member name="P:BootstrapBlazor.Components.PdfReader.Debug">
             <summary>
             Debug
@@ -161,7 +191,7 @@
             <param name="page">页码</param>
             <returns></returns>
         </member>
-        <member name="M:BootstrapBlazor.Components.PdfReader.Refresh(System.String,System.Nullable{System.Int32},System.Nullable{BootstrapBlazor.Components.EnumPageMode},System.Nullable{BootstrapBlazor.Components.EnumZoomMode})">
+        <member name="M:BootstrapBlazor.Components.PdfReader.Refresh(System.String,System.Nullable{System.Int32},System.Nullable{BootstrapBlazor.Components.EnumPageMode},System.Nullable{BootstrapBlazor.Components.EnumZoomMode},System.Nullable{System.Boolean},System.String)">
             <summary>
             刷新组件
             </summary>
@@ -169,6 +199,8 @@
             <param name="page">页码</param>
             <param name="pagemode">页面模式</param>
             <param name="zoom">缩放模式</param>
+            <param name="readOnly">禁用复制/打印/下载</param>
+            <param name="watermark">水印内容</param>
             <returns></returns>
         </member>
         <member name="M:BootstrapBlazor.Components.PdfReader.ShowPdf(System.IO.Stream)">
