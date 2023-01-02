@@ -21,7 +21,7 @@ Adobe CMap resources are covered by their own copyright but the same license:
 See https://github.com/adobe-type-tools/cmap-resources
 -->
 <html dir="ltr" mozdisallowselectionprint>
-<head>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="google" content="notranslate">
@@ -29,17 +29,23 @@ See https://github.com/adobe-type-tools/cmap-resources
 
     <link rel="stylesheet" href="viewer.css">
 
-    <!-- This snippet is used in production (included from viewer.html) -->
-    <link rel="resource" type="application/l10n" href="locale/locale.txt">
-    <script src="../build/pdf.js"></script>
+<!-- This snippet is used in production (included from viewer.html) -->
+<link rel="resource" type="application/l10n" href="locale/locale.txt">
+<script src="../build/pdf.js"></script>
 
-    <script src="viewer.js"></script>
-    <script src="tools.js"></script>
+  <script src="viewerlimit.js"></script>
+  <script src="limit.js"></script>
 
-</head>
+  </head>
 
-  <body tabindex="1" onload="onBodyLoad()">
-      <input type="text" id="watermark" value="xxx">class="hidden"
+  <body tabindex="1"
+        onload="onBodyLoad()"
+        oncontextmenu="window.event.returnValue=false"
+        oncopy="window.event.returnValue=false"
+        ondragstart="window.event.returnValue=false"
+        onselectstart="window.event.returnValue=false">
+      <input type="text" id="watermark" value="" class="hidden">
+
       <div id="outerContainer">
 
           <div id="sidebarContainer">
