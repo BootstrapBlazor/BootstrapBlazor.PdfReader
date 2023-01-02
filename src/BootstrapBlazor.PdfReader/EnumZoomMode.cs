@@ -13,34 +13,19 @@ namespace BootstrapBlazor.Components;
 /// 缩放模式
 /// </summary>
 public enum EnumZoomMode
-{
-    /// <summary>
-    /// 自动缩放
-    /// </summary>
+{ 
     [Description("auto")]
     Auto,
 
-    /// <summary>
-    /// 实际大小
-    /// </summary>
-    [Description("page-actual")]
-    PageActual,
-
-    /// <summary>
-    /// 适合页面
-    /// </summary>
     [Description("page-fit")]
     PageFit,
 
-    /// <summary>
-    /// 适合页宽
-    /// </summary>
     [Description("page-width")]
     PageWidth,
 
     [Description("page-height")]
     PageHeight,
-    
+
     [Description("pref")]
     Pref,
 
@@ -55,9 +40,6 @@ public enum EnumZoomMode
 
     [Description("25")]
     Zoom25,
-
-    [Description("200")]
-    Zoom200,
      
 }
 /// <summary>
