@@ -483,7 +483,7 @@
             function getActiveOrFocusedElement() {
                 let curRoot = document;
                 let curActiveOrFocused = curRoot.activeElement || curRoot.querySelector(":focus");
-                while (curActiveOrFocused?.shadowRoot) {
+                while (curActiveOrFocused.shadowRoot) {
                     curRoot = curActiveOrFocused.shadowRoot;
                     curActiveOrFocused = curRoot.activeElement || curRoot.querySelector(":focus");
                 }
@@ -1105,10 +1105,10 @@
                 executeNamedAction(action) {
                     switch (action) {
                         case "GoBack":
-                            this.pdfHistory?.back();
+                            this.pdfHistory.back();
                             break;
                         case "GoForward":
-                            this.pdfHistory?.forward();
+                            this.pdfHistory.forward();
                             break;
                         case "NextPage":
                             this.pdfViewer.nextPage();
@@ -1452,7 +1452,7 @@
                     try {
                         _app_options.AppOptions.setAll(await this.preferences.getAll());
                     } catch (reason) {
-                        console.error(`_readPreferences: "${reason?.message}".`);
+                        console.error(`_readPreferences: "${reason.message}".`);
                     }
                 },
                 async _parseHashParameters() {
@@ -1542,16 +1542,16 @@
                     }
                     try {
                         const styleSheet = document.styleSheets[0];
-                        const cssRules = styleSheet?.cssRules || [];
+                        const cssRules = styleSheet.cssRules || [];
                         for (let i = 0, ii = cssRules.length; i < ii; i++) {
                             const rule = cssRules[i];
-                            if (rule instanceof CSSMediaRule && rule.media?.[0] === "(prefers-color-scheme: dark)") {
+                            if (rule instanceof CSSMediaRule && rule.media.[0] === "(prefers-color-scheme: dark)") {
                                 if (cssTheme === ViewerCssTheme.LIGHT) {
                                     styleSheet.deleteRule(i);
                                     return;
                                 }
                                 const darkRules = /^@media \(prefers-color-scheme: dark\) {\n\s*([\w\s-.,:;/\\{}()]+)\n}$/.exec(rule.cssText);
-                                if (darkRules?.[1]) {
+                                if (darkRules.[1]) {
                                     styleSheet.deleteRule(i);
                                     styleSheet.insertRule(darkRules[1], i);
                                 }
@@ -1559,7 +1559,7 @@
                             }
                         }
                     } catch (reason) {
-                        console.error(`_forceCssTheme: "${reason?.message}".`);
+                        console.error(`_forceCssTheme: "${reason.message}".`);
                     }
                 },
                 async _initializeViewerComponents() {
@@ -1789,7 +1789,7 @@
                     if (!this.pdfLoadingTask) {
                         return;
                     }
-                    if (this.pdfDocument?.annotationStorage.size > 0 && this._annotationStorageModified) {
+                    if (this.pdfDocument.annotationStorage.size > 0 && this._annotationStorageModified) {
                         try {
                             await this.save();
                         } catch (reason) { }
@@ -1824,11 +1824,11 @@
                     this.pdfOutlineViewer.reset();
                     this.pdfAttachmentViewer.reset();
                     this.pdfLayerViewer.reset();
-                    this.pdfHistory?.reset();
-                    this.findBar?.reset();
+                    this.pdfHistory.reset();
+                    this.findBar.reset();
                     this.toolbar.reset();
                     this.secondaryToolbar.reset();
-                    this._PDFBug?.cleanup();
+                    this._PDFBug.cleanup();
                     await Promise.all(promises);
                 },
                 async open(file, args) {
@@ -1893,7 +1893,7 @@
                         }
                         return this.l10n.get(key).then(msg => {
                             this._documentError(msg, {
-                                message: reason?.message
+                                message: reason.message
                             });
                             throw reason;
                         });
@@ -1951,7 +1951,7 @@
                     }
                 },
                 downloadOrSave() {
-                    if (this.pdfDocument?.annotationStorage.size > 0) {
+                    if (this.pdfDocument.annotationStorage.size > 0) {
                         this.save();
                     } else {
                         this.download();
@@ -1969,7 +1969,7 @@
                     this.eventBus.dispatch("documenterror", {
                         source: this,
                         message,
-                        reason: moreInfo?.message ?? null
+                        reason: moreInfo.message ?? null
                     });
                 },
                 _otherError(message, moreInfo = null) {
@@ -1999,7 +1999,7 @@
                         return;
                     }
                     this.loadingBar.percent = percent;
-                    const disableAutoFetch = this.pdfDocument?.loadingParams.disableAutoFetch ?? _app_options.AppOptions.get("disableAutoFetch");
+                    const disableAutoFetch = this.pdfDocument.loadingParams.disableAutoFetch ?? _app_options.AppOptions.get("disableAutoFetch");
                     if (!disableAutoFetch || isNaN(percent)) {
                         return;
                     }
@@ -2065,7 +2065,7 @@
                             this._initializePdfHistory({
                                 fingerprint: pdfDocument.fingerprints[0],
                                 viewOnLoad,
-                                initialDest: openAction?.dest
+                                initialDest: openAction.dest
                             });
                             const initialBookmark = this.initialBookmark;
                             const zoom = _app_options.AppOptions.get("defaultZoomValue");
@@ -2130,7 +2130,7 @@
                     }, reason => {
                         this.l10n.get("loading_error").then(msg => {
                             this._documentError(msg, {
-                                message: reason?.message
+                                message: reason.message
                             });
                         });
                     });
@@ -2195,8 +2195,8 @@
                         baseURL: this.baseUrl,
                         filesize: this._contentLength,
                         filename: this._docFilename,
-                        metadata: this.metadata?.getRaw(),
-                        authors: this.metadata?.get("dc:creator"),
+                        metadata: this.metadata.getRaw(),
+                        authors: this.metadata.get("dc:creator"),
                         numPages: this.pagesCount,
                         URL: this.url
                     };
@@ -2207,7 +2207,7 @@
                         return;
                     }
                     let triggerAutoPrint = false;
-                    if (openAction?.action === "Print") {
+                    if (openAction.action === "Print") {
                         triggerAutoPrint = true;
                     }
                     if (javaScript) {
@@ -2248,7 +2248,7 @@
                     this._contentLength ??= contentLength;
                     console.log(`PDF ${pdfDocument.fingerprints[0]} [${info.PDFFormatVersion} ` + `${(info.Producer || "-").trim()} / ${(info.Creator || "-").trim()}] ` + `(PDF.js: ${_pdfjsLib.version || "?"} [${_pdfjsLib.build || "?"}])`);
                     let pdfTitle = info.Title;
-                    const metadataTitle = metadata?.get("dc:title");
+                    const metadataTitle = metadata.get("dc:title");
                     if (metadataTitle) {
                         if (metadataTitle !== "Untitled" && !/[\uFFF0-\uFFFF]/g.test(metadataTitle)) {
                             pdfTitle = metadataTitle;
@@ -2444,7 +2444,7 @@
                 },
                 beforePrint() {
                     this._printAnnotationStoragePromise = this.pdfScriptingManager.dispatchWillPrint().catch(() => { }).then(() => {
-                        return this.pdfDocument?.annotationStorage.print;
+                        return this.pdfDocument.annotationStorage.print;
                     });
                     if (this.printService) {
                         return;
@@ -2492,7 +2492,7 @@
                     if (this.printService) {
                         this.printService.destroy();
                         this.printService = null;
-                        this.pdfDocument?.annotationStorage.resetModified();
+                        this.pdfDocument.annotationStorage.resetModified();
                     }
                     this.forceRendering();
                     this.setTitle();
@@ -2501,7 +2501,7 @@
                     this.pdfViewer.pagesRotation += delta;
                 },
                 requestPresentationMode() {
-                    this.pdfPresentationMode?.request();
+                    this.pdfPresentationMode.request();
                 },
                 triggerPrinting() {
                     if (!this.supportsPrinting) {
@@ -2692,7 +2692,7 @@
                     window.removeEventListener("beforeprint", _boundEvents.windowBeforePrint);
                     window.removeEventListener("afterprint", _boundEvents.windowAfterPrint);
                     window.removeEventListener("updatefromsandbox", _boundEvents.windowUpdateFromSandbox);
-                    _boundEvents.removeWindowResolutionChange?.();
+                    _boundEvents.removeWindowResolutionChange.();
                     _boundEvents.windowResize = null;
                     _boundEvents.windowHashChange = null;
                     _boundEvents.windowBeforePrint = null;
@@ -2709,7 +2709,7 @@
                     return wholeTicks;
                 },
                 _unblockDocumentLoadEvent() {
-                    document.blockUnblockOnload?.(false);
+                    document.blockUnblockOnload.(false);
                     this._unblockDocumentLoadEvent = () => { };
                 },
                 _reportDocumentStatsTelemetry() {
@@ -2747,7 +2747,7 @@
                     } catch (ex) {
                         PDFViewerApplication.l10n.get("loading_error").then(msg => {
                             PDFViewerApplication._documentError(msg, {
-                                message: ex?.message
+                                message: ex.message
                             });
                         });
                         throw ex;
@@ -2770,11 +2770,11 @@
             function reportPageStatsPDFBug({
                 pageNumber
             }) {
-                if (!globalThis.Stats?.enabled) {
+                if (!globalThis.Stats.enabled) {
                     return;
                 }
                 const pageView = PDFViewerApplication.pdfViewer.getPageView(pageNumber - 1);
-                globalThis.Stats.add(pageNumber, pageView?.pdfPage?.stats);
+                globalThis.Stats.add(pageNumber, pageView.pdfPage.stats);
             }
             function webViewerInitialized() {
                 const {
@@ -2926,14 +2926,14 @@
             }) {
                 PDFViewerApplication.pdfRenderingQueue.isThumbnailViewEnabled = view === _ui_utils.SidebarView.THUMBS;
                 if (PDFViewerApplication.isInitialViewSet) {
-                    PDFViewerApplication.store?.set("sidebarView", view).catch(() => { });
+                    PDFViewerApplication.store.set("sidebarView", view).catch(() => { });
                 }
             }
             function webViewerUpdateViewarea({
                 location
             }) {
                 if (PDFViewerApplication.isInitialViewSet) {
-                    PDFViewerApplication.store?.setMultiple({
+                    PDFViewerApplication.store.setMultiple({
                         page: location.pageNumber,
                         zoom: location.scale,
                         scrollLeft: location.left,
@@ -2944,17 +2944,17 @@
                 const href = PDFViewerApplication.pdfLinkService.getAnchorUrl(location.pdfOpenParams);
                 PDFViewerApplication.appConfig.secondaryToolbar.viewBookmarkButton.href = href;
                 const currentPage = PDFViewerApplication.pdfViewer.getPageView(PDFViewerApplication.page - 1);
-                const loading = currentPage?.renderingState !== _ui_utils.RenderingStates.FINISHED;
+                const loading = currentPage.renderingState !== _ui_utils.RenderingStates.FINISHED;
                 PDFViewerApplication.toolbar.updateLoadingIndicatorState(loading);
             }
             function webViewerScrollModeChanged(evt) {
                 if (PDFViewerApplication.isInitialViewSet && !PDFViewerApplication.pdfViewer.isInPresentationMode) {
-                    PDFViewerApplication.store?.set("scrollMode", evt.mode).catch(() => { });
+                    PDFViewerApplication.store.set("scrollMode", evt.mode).catch(() => { });
                 }
             }
             function webViewerSpreadModeChanged(evt) {
                 if (PDFViewerApplication.isInitialViewSet && !PDFViewerApplication.pdfViewer.isInPresentationMode) {
-                    PDFViewerApplication.store?.set("spreadMode", evt.mode).catch(() => { });
+                    PDFViewerApplication.store.set("spreadMode", evt.mode).catch(() => { });
                 }
             }
             function webViewerResize() {
@@ -2983,13 +2983,13 @@
                 }
                 if (!PDFViewerApplication.isInitialViewSet) {
                     PDFViewerApplication.initialBookmark = hash;
-                } else if (!PDFViewerApplication.pdfHistory?.popStateInProgress) {
+                } else if (!PDFViewerApplication.pdfHistory.popStateInProgress) {
                     PDFViewerApplication.pdfLinkService.setHash(hash);
                 }
             }
             {
                 var webViewerFileInputChange = function (evt) {
-                    if (PDFViewerApplication.pdfViewer?.isInPresentationMode) {
+                    if (PDFViewerApplication.pdfViewer.isInPresentationMode) {
                         return;
                     }
                     const file = evt.fileInput.files[0];
@@ -3333,8 +3333,8 @@
                     return;
                 }
                 const curElement = (0, _ui_utils.getActiveOrFocusedElement)();
-                const curElementTagName = curElement?.tagName.toUpperCase();
-                if (curElementTagName === "INPUT" || curElementTagName === "TEXTAREA" || curElementTagName === "SELECT" || curElement?.isContentEditable) {
+                const curElementTagName = curElement.tagName.toUpperCase();
+                if (curElementTagName === "INPUT" || curElementTagName === "TEXTAREA" || curElementTagName === "SELECT" || curElement.isContentEditable) {
                     if (evt.keyCode !== 27) {
                         return;
                     }
@@ -3544,13 +3544,13 @@
                 on(eventName, listener, options = null) {
                     this._on(eventName, listener, {
                         external: true,
-                        once: options?.once
+                        once: options.once
                     });
                 }
                 off(eventName, listener, options = null) {
                     this._off(eventName, listener, {
                         external: true,
-                        once: options?.once
+                        once: options.once
                     });
                 }
                 dispatch(eventName, data) {
@@ -3584,8 +3584,8 @@
                     const eventListeners = this.#listeners[eventName] ||= [];
                     eventListeners.push({
                         listener,
-                        external: options?.external === true,
-                        once: options?.once === true
+                        external: options.external === true,
+                        once: options.once === true
                     });
                 }
                 _off(eventName, listener, options = null) {
@@ -3772,7 +3772,7 @@
                         this.active = true;
                         this.element.addEventListener("mousedown", this._onMouseDown, true);
                         this.element.classList.add(CSS_CLASS_GRAB);
-                        this.onActiveChanged?.(true);
+                        this.onActiveChanged.(true);
                     }
                 }
                 deactivate() {
@@ -3781,7 +3781,7 @@
                         this.element.removeEventListener("mousedown", this._onMouseDown, true);
                         this._endPan();
                         this.element.classList.remove(CSS_CLASS_GRAB);
-                        this.onActiveChanged?.(false);
+                        this.onActiveChanged.(false);
                     }
                 }
                 toggle() {
@@ -4062,7 +4062,7 @@
                 }
                 #verify() {
                     const password = this.input.value;
-                    if (password?.length > 0) {
+                    if (password.length > 0) {
                         this.#invokeCallback(password);
                     }
                 }
@@ -4301,7 +4301,7 @@
                     while (currentNode && currentNode !== this.container) {
                         if (currentNode.classList.contains("treeItem")) {
                             const toggler = currentNode.firstElementChild;
-                            toggler?.classList.remove("treeItemsHidden");
+                            toggler.classList.remove("treeItemsHidden");
                         }
                         currentNode = currentNode.parentNode;
                     }
@@ -4825,7 +4825,7 @@
                         const len = hasTrailingDashEOL ? p3.length - 2 : p3.length;
                         hasDiacritics = true;
                         let jj = len;
-                        if (i + eol === rawDiacriticsPositions[rawDiacriticsIndex]?.[1]) {
+                        if (i + eol === rawDiacriticsPositions[rawDiacriticsIndex].[1]) {
                             jj -= rawDiacriticsPositions[rawDiacriticsIndex][0];
                             ++rawDiacriticsIndex;
                         }
@@ -4864,7 +4864,7 @@
                         eol += 1;
                         return " ";
                     }
-                    if (i + eol === syllablePositions[syllableIndex]?.[1]) {
+                    if (i + eol === syllablePositions[syllableIndex].[1]) {
                         const newCharLen = syllablePositions[syllableIndex][0] - 1;
                         ++syllableIndex;
                         for (let j = 1; j <= newCharLen; j++) {
@@ -5355,7 +5355,7 @@
                         total = this._matchesCountTotal;
                     if (matchIdx !== -1) {
                         for (let i = 0; i < pageIdx; i++) {
-                            current += this._pageMatches[i]?.length || 0;
+                            current += this._pageMatches[i].length || 0;
                         }
                         current += matchIdx + 1;
                     }
@@ -5379,7 +5379,7 @@
                         state,
                         previous,
                         matchesCount: this.#requestMatchesCount(),
-                        rawQuery: this._state?.query ?? null
+                        rawQuery: this._state.query ?? null
                     });
                 }
             }
@@ -5631,7 +5631,7 @@
                         console.error(`PDFHistory.pushPage: "${pageNumber}" is not a valid page number.`);
                         return;
                     }
-                    if (this._destination?.page === pageNumber) {
+                    if (this._destination.page === pageNumber) {
                         return;
                     }
                     if (this._popStateInProgress) {
@@ -5692,7 +5692,7 @@
                     };
                     this._updateInternalState(destination, newState.uid);
                     let newUrl;
-                    if (this._updateUrl && destination?.hash) {
+                    if (this._updateUrl && destination.hash) {
                         const baseUrl = document.location.href.split("#")[0];
                         if (!baseUrl.startsWith("file://")) {
                             newUrl = `${baseUrl}#${destination.hash}`;
@@ -5749,7 +5749,7 @@
                                 return false;
                             }
                             const [perfEntry] = performance.getEntriesByType("navigation");
-                            if (perfEntry?.type !== "reload") {
+                            if (perfEntry.type !== "reload") {
                                 return false;
                             }
                         } else {
@@ -5769,7 +5769,7 @@
                         clearTimeout(this._updateViewareaTimeout);
                         this._updateViewareaTimeout = null;
                     }
-                    if (removeTemporary && destination?.temporary) {
+                    if (removeTemporary && destination.temporary) {
                         delete destination.temporary;
                     }
                     this._destination = destination;
@@ -6035,7 +6035,7 @@
                     }
                     this._optionalContentConfig = optionalContentConfig || null;
                     this._pdfDocument = pdfDocument || null;
-                    const groups = optionalContentConfig?.getOrder();
+                    const groups = optionalContentConfig.getOrder();
                     if (!groups) {
                         this._dispatchEvent(0);
                         return;
@@ -6160,7 +6160,7 @@
                 }
                 _dispatchEvent(outlineCount) {
                     this._currentOutlineItemCapability = (0, _pdfjsLib.createPromiseCapability)();
-                    if (outlineCount === 0 || this._pdfDocument?.loadingParams.disableAutoFetch) {
+                    if (outlineCount === 0 || this._pdfDocument.loadingParams.disableAutoFetch) {
                         this._currentOutlineItemCapability.resolve(false);
                     } else if (this._isPagesLoaded !== null) {
                         this._currentOutlineItemCapability.resolve(this._isPagesLoaded);
@@ -6555,7 +6555,7 @@
                     if (evt.button !== 0) {
                         return;
                     }
-                    if (evt.target.href && evt.target.parentNode?.hasAttribute("data-internal-link")) {
+                    if (evt.target.href && evt.target.parentNode.hasAttribute("data-internal-link")) {
                         return;
                     }
                     evt.preventDefault();
@@ -6735,7 +6735,7 @@
                     if (this.pdfViewer.forceRendering(currentlyVisiblePages)) {
                         return;
                     }
-                    if (this.isThumbnailViewEnabled && this.pdfThumbnailViewer?.forceRendering()) {
+                    if (this.isThumbnailViewEnabled && this.pdfThumbnailViewer.forceRendering()) {
                         return;
                     }
                     if (this.printing) {
@@ -6871,18 +6871,18 @@
                     try {
                         this._scripting = this._createScripting();
                     } catch (error) {
-                        console.error(`PDFScriptingManager.setDocument: "${error?.message}".`);
+                        console.error(`PDFScriptingManager.setDocument: "${error.message}".`);
                         await this._destroyScripting();
                         return;
                     }
                     this._internalEvents.set("updatefromsandbox", event => {
-                        if (event?.source !== window) {
+                        if (event.source !== window) {
                             return;
                         }
                         this._updateFromSandbox(event.detail);
                     });
                     this._internalEvents.set("dispatcheventinsandbox", event => {
-                        this._scripting?.dispatchEventInSandbox(event.detail);
+                        this._scripting.dispatchEventInSandbox(event.detail);
                     });
                     this._internalEvents.set("pagechanging", ({
                         pageNumber,
@@ -6907,11 +6907,11 @@
                     });
                     this._internalEvents.set("pagesdestroy", async event => {
                         await this._dispatchPageClose(this._pdfViewer.currentPageNumber);
-                        await this._scripting?.dispatchEventInSandbox({
+                        await this._scripting.dispatchEventInSandbox({
                             id: "doc",
                             name: "WillClose"
                         });
-                        this._closeCapability?.resolve();
+                        this._closeCapability.resolve();
                     });
                     this._domEvents.set("mousedown", event => {
                         this._mouseState.isDown = true;
@@ -6946,11 +6946,11 @@
                             source: this
                         });
                     } catch (error) {
-                        console.error(`PDFScriptingManager.setDocument: "${error?.message}".`);
+                        console.error(`PDFScriptingManager.setDocument: "${error.message}".`);
                         await this._destroyScripting();
                         return;
                     }
-                    await this._scripting?.dispatchEventInSandbox({
+                    await this._scripting.dispatchEventInSandbox({
                         id: "doc",
                         name: "Open"
                     });
@@ -6962,25 +6962,25 @@
                     });
                 }
                 async dispatchWillSave(detail) {
-                    return this._scripting?.dispatchEventInSandbox({
+                    return this._scripting.dispatchEventInSandbox({
                         id: "doc",
                         name: "WillSave"
                     });
                 }
                 async dispatchDidSave(detail) {
-                    return this._scripting?.dispatchEventInSandbox({
+                    return this._scripting.dispatchEventInSandbox({
                         id: "doc",
                         name: "DidSave"
                     });
                 }
                 async dispatchWillPrint(detail) {
-                    return this._scripting?.dispatchEventInSandbox({
+                    return this._scripting.dispatchEventInSandbox({
                         id: "doc",
                         name: "WillPrint"
                     });
                 }
                 async dispatchDidPrint(detail) {
-                    return this._scripting?.dispatchEventInSandbox({
+                    return this._scripting.dispatchEventInSandbox({
                         id: "doc",
                         name: "DidPrint"
                     });
@@ -6989,7 +6989,7 @@
                     return this._mouseState;
                 }
                 get destroyPromise() {
-                    return this._destroyCapability?.promise || null;
+                    return this._destroyCapability.promise || null;
                 }
                 get ready() {
                     return this._ready;
@@ -7094,7 +7094,7 @@
                                 detail
                             }));
                         } else {
-                            this._pdfDocument?.annotationStorage.setValue(elementId, detail);
+                            this._pdfDocument.annotationStorage.setValue(elementId, detail);
                         }
                     }
                 }
@@ -7108,17 +7108,17 @@
                         return;
                     }
                     const pageView = this._pdfViewer.getPageView(pageNumber - 1);
-                    if (pageView?.renderingState !== _ui_utils.RenderingStates.FINISHED) {
+                    if (pageView.renderingState !== _ui_utils.RenderingStates.FINISHED) {
                         this._pageOpenPending.add(pageNumber);
                         return;
                     }
                     this._pageOpenPending.delete(pageNumber);
                     const actionsPromise = (async () => {
-                        const actions = await (!visitedPages.has(pageNumber) ? pageView.pdfPage?.getJSActions() : null);
+                        const actions = await (!visitedPages.has(pageNumber) ? pageView.pdfPage.getJSActions() : null);
                         if (pdfDocument !== this._pdfDocument) {
                             return;
                         }
-                        await this._scripting?.dispatchEventInSandbox({
+                        await this._scripting.dispatchEventInSandbox({
                             id: "page",
                             name: "PageOpen",
                             pageNumber,
@@ -7145,7 +7145,7 @@
                     if (pdfDocument !== this._pdfDocument) {
                         return;
                     }
-                    await this._scripting?.dispatchEventInSandbox({
+                    await this._scripting.dispatchEventInSandbox({
                         id: "page",
                         name: "PageClose",
                         pageNumber
@@ -7172,7 +7172,7 @@
                 async _destroyScripting() {
                     if (!this._scripting) {
                         this._pdfDocument = null;
-                        this._destroyCapability?.resolve();
+                        this._destroyCapability.resolve();
                         return;
                     }
                     if (this._closeCapability) {
@@ -7198,7 +7198,7 @@
                     this._scripting = null;
                     delete this._mouseState.isDown;
                     this._ready = false;
-                    this._destroyCapability?.resolve();
+                    this._destroyCapability.resolve();
                 }
             }
             exports.PDFScriptingManager = PDFScriptingManager;
@@ -7397,7 +7397,7 @@
                     const pagesCount = pdfViewer.pagesCount;
                     for (let pageIndex = 0; pageIndex < pagesCount; pageIndex++) {
                         const pageView = pdfViewer.getPageView(pageIndex);
-                        if (pageView?.renderingState === _ui_utils.RenderingStates.FINISHED) {
+                        if (pageView.renderingState === _ui_utils.RenderingStates.FINISHED) {
                             const thumbnailView = pdfThumbnailViewer.getThumbnail(pageIndex);
                             thumbnailView.setImage(pageView);
                         }
@@ -7565,10 +7565,10 @@
                         window.addEventListener("mouseup", _boundEvents.mouseUp);
                     });
                     this.eventBus._on("sidebarviewchanged", evt => {
-                        this.sidebarOpen = !!evt?.view;
+                        this.sidebarOpen = !!evt.view;
                     });
                     this.eventBus._on("resize", evt => {
-                        if (evt?.source !== window) {
+                        if (evt.source !== window) {
                             return;
                         }
                         this._outerContainerWidth = null;
@@ -7752,7 +7752,7 @@
                             });
                             this._thumbnails.push(thumbnail);
                         }
-                        this._thumbnails[0]?.setPdfPage(firstPdfPage);
+                        this._thumbnails[0].setPdfPage(firstPdfPage);
                         const thumbnailView = this._thumbnails[this._currentPageNumber - 1];
                         thumbnailView.div.classList.add(THUMBNAIL_SELECTED_CLASS);
                     }).catch(reason => {
@@ -7777,7 +7777,7 @@
                         this._pageLabels = labels;
                     }
                     for (let i = 0, ii = this._thumbnails.length; i < ii; i++) {
-                        this._thumbnails[i].setPageLabel(this._pageLabels?.[i] ?? null);
+                        this._thumbnails[i].setPageLabel(this._pageLabels.[i] ?? null);
                     }
                 }
                 async #ensurePdfPageLoaded(thumbView) {
@@ -7796,9 +7796,9 @@
                     }
                 }
                 #getScrollAhead(visible) {
-                    if (visible.first?.id === 1) {
+                    if (visible.first.id === 1) {
                         return true;
-                    } else if (visible.last?.id === this._thumbnails.length) {
+                    } else if (visible.last.id === this._thumbnails.length) {
                         return false;
                     }
                     return this.scroll.down;
@@ -8068,7 +8068,7 @@
                         canvas.height = 0;
                         const pageCached = this.linkService.isPageCached(this.id);
                         if (!pageCached) {
-                            this.pdfPage?.cleanup();
+                            this.pdfPage.cleanup();
                         }
                     });
                     return resultPromise;
@@ -8138,7 +8138,7 @@
                         return;
                     }
                     this._thumbPageCanvas.then(msg => {
-                        this.image?.setAttribute("aria-label", msg);
+                        this.image.setAttribute("aria-label", msg);
                     });
                 }
             }
@@ -8222,7 +8222,7 @@
                 }
                 #destroyFirstView() {
                     const firstView = this.#buf.keys().next().value;
-                    firstView?.destroy();
+                    firstView.destroy();
                     this.#buf.delete(firstView);
                 }
             }
@@ -8243,7 +8243,7 @@
                     }
                     this.container = options.container;
                     this.viewer = options.viewer || options.container.firstElementChild;
-                    if (!(this.container?.tagName.toUpperCase() === "DIV" && this.viewer?.tagName.toUpperCase() === "DIV")) {
+                    if (!(this.container.tagName.toUpperCase() === "DIV" && this.viewer.tagName.toUpperCase() === "DIV")) {
                         throw new Error("Invalid `container` and/or `viewer` option.");
                     }
                     if (this.container.offsetParent && getComputedStyle(this.container).position !== "absolute") {
@@ -8299,7 +8299,7 @@
                         return false;
                     }
                     return this._pages.every(function (pageView) {
-                        return pageView?.pdfPage;
+                        return pageView.pdfPage;
                     });
                 }
                 get renderForms() {
@@ -8337,7 +8337,7 @@
                     this.eventBus.dispatch("pagechanging", {
                         source: this,
                         pageNumber: val,
-                        pageLabel: this._pageLabels?.[val - 1] ?? null,
+                        pageLabel: this._pageLabels.[val - 1] ?? null,
                         previous
                     });
                     if (resetCurrentPageView) {
@@ -8346,7 +8346,7 @@
                     return true;
                 }
                 get currentPageLabel() {
-                    return this._pageLabels?.[this._currentPageNumber - 1] ?? null;
+                    return this._pageLabels.[this._currentPageNumber - 1] ?? null;
                 }
                 set currentPageLabel(val) {
                     if (!this.pdfDocument) {
@@ -8474,8 +8474,8 @@
                         });
                         this._cancelRendering();
                         this._resetView();
-                        this.findController?.setDocument(null);
-                        this._scriptingManager?.setDocument(null);
+                        this.findController.setDocument(null);
+                        this._scriptingManager.setDocument(null);
                         if (this.#annotationEditorUIManager) {
                             this.#annotationEditorUIManager.destroy();
                             this.#annotationEditorUIManager = null;
@@ -8597,8 +8597,8 @@
                             this._updateSpreadMode();
                         }
                         this.#onePageRenderedOrForceFetch().then(async () => {
-                            this.findController?.setDocument(pdfDocument);
-                            this._scriptingManager?.setDocument(pdfDocument);
+                            this.findController.setDocument(pdfDocument);
+                            this._scriptingManager.setDocument(pdfDocument);
                             if (this.#annotationEditorUIManager) {
                                 this.eventBus.dispatch("annotationeditormodechanged", {
                                     source: this,
@@ -8669,7 +8669,7 @@
                         this._pageLabels = labels;
                     }
                     for (let i = 0, ii = this._pages.length; i < ii; i++) {
-                        this._pages[i].setPageLabel(this._pageLabels?.[i] ?? null);
+                        this._pages[i].setPageLabel(this._pageLabels.[i] ?? null);
                     }
                 }
                 _resetView() {
@@ -9130,7 +9130,7 @@
                         if (!pageView.pdfPage) {
                             pageView.setPdfPage(pdfPage);
                         }
-                        if (!this.linkService._cachedPageNumber?.(pdfPage.ref)) {
+                        if (!this.linkService._cachedPageNumber.(pdfPage.ref)) {
                             this.linkService.cachePageRef(pageView.id, pdfPage.ref);
                         }
                         return pdfPage;
@@ -9140,9 +9140,9 @@
                     }
                 }
                 #getScrollAhead(visible) {
-                    if (visible.first?.id === 1) {
+                    if (visible.first.id === 1) {
                         return true;
-                    } else if (visible.last?.id === this.pagesCount) {
+                    } else if (visible.last.id === this.pagesCount) {
                         return false;
                     }
                     switch (this._scrollMode) {
@@ -9156,7 +9156,7 @@
                 #toggleLoadingIconSpinner(visibleIds) {
                     for (const id of visibleIds) {
                         const pageView = this._pages[id - 1];
-                        pageView?.toggleLoadingIconSpinner(true);
+                        pageView.toggleLoadingIconSpinner(true);
                     }
                     for (const pageView of this.#buffer) {
                         if (visibleIds.has(pageView.id)) {
@@ -9209,14 +9209,14 @@
                 createAnnotationLayerBuilder({
                     pageDiv,
                     pdfPage,
-                    annotationStorage = this.pdfDocument?.annotationStorage,
+                    annotationStorage = this.pdfDocument.annotationStorage,
                     imageResourcesPath = "",
                     renderForms = true,
                     l10n = _l10n_utils.NullL10n,
                     enableScripting = this.enableScripting,
-                    hasJSActionsPromise = this.pdfDocument?.hasJSActions(),
-                    mouseState = this._scriptingManager?.mouseState,
-                    fieldObjectsPromise = this.pdfDocument?.getFieldObjects(),
+                    hasJSActionsPromise = this.pdfDocument.hasJSActions(),
+                    mouseState = this._scriptingManager.mouseState,
+                    fieldObjectsPromise = this.pdfDocument.getFieldObjects(),
                     annotationCanvasMap = null,
                     accessibilityManager = null
                 }) {
@@ -9243,7 +9243,7 @@
                     pdfPage,
                     accessibilityManager = null,
                     l10n,
-                    annotationStorage = this.pdfDocument?.annotationStorage
+                    annotationStorage = this.pdfDocument.annotationStorage
                 }) {
                     return new _annotation_editor_layer_builder.AnnotationEditorLayerBuilder({
                         uiManager,
@@ -9257,7 +9257,7 @@
                 createXfaLayerBuilder({
                     pageDiv,
                     pdfPage,
-                    annotationStorage = this.pdfDocument?.annotationStorage
+                    annotationStorage = this.pdfDocument.annotationStorage
                 }) {
                     return new _xfa_layer_builder.XfaLayerBuilder({
                         pageDiv,
@@ -9805,7 +9805,7 @@
                 zh: "zh-CN"
             };
             function fixupLangCode(langCode) {
-                return PARTIAL_LANG_CODES[langCode?.toLowerCase()] || langCode;
+                return PARTIAL_LANG_CODES[langCode.toLowerCase()] || langCode;
             }
             function formatL10nValue(text, args) {
                 if (!args) {
@@ -9921,14 +9921,14 @@
                             this.#onPresentationModeChanged = evt => {
                                 this.#updatePresentationModeState(evt.state);
                             };
-                            this._eventBus?._on("presentationmodechanged", this.#onPresentationModeChanged);
+                            this._eventBus._on("presentationmodechanged", this.#onPresentationModeChanged);
                         }
                     }
                 }
                 cancel() {
                     this._cancelled = true;
                     if (this.#onPresentationModeChanged) {
-                        this._eventBus?._off("presentationmodechanged", this.#onPresentationModeChanged);
+                        this._eventBus._off("presentationmodechanged", this.#onPresentationModeChanged);
                         this.#onPresentationModeChanged = null;
                     }
                 }
@@ -10010,7 +10010,7 @@
                     this.annotationLayerFactory = options.annotationLayerFactory;
                     this.annotationEditorLayerFactory = options.annotationEditorLayerFactory;
                     this.xfaLayerFactory = options.xfaLayerFactory;
-                    this.textHighlighter = options.textHighlighterFactory?.createTextHighlighter({
+                    this.textHighlighter = options.textHighlighterFactory.createTextHighlighter({
                         pageIndex: this.id - 1,
                         eventBus: this.eventBus
                     });
@@ -10022,7 +10022,7 @@
                     this.renderingState = _ui_utils.RenderingStates.INITIAL;
                     this.resume = null;
                     this._renderError = null;
-                    this._isStandalone = !this.renderingQueue?.hasViewer();
+                    this._isStandalone = !this.renderingQueue.hasViewer();
                     this._annotationCanvasMap = null;
                     this.annotationLayer = null;
                     this.annotationEditorLayer = null;
@@ -10042,7 +10042,7 @@
                         div.setAttribute("aria-label", msg);
                     });
                     this.div = div;
-                    container?.append(div);
+                    container.append(div);
                     if (this._isStandalone) {
                         const {
                             optionalContentConfigPromise
@@ -10069,7 +10069,7 @@
                 }
                 destroy() {
                     this.reset();
-                    this.pdfPage?.cleanup();
+                    this.pdfPage.cleanup();
                 }
                 async _renderAnnotationLayer() {
                     let error = null;
@@ -10105,7 +10105,7 @@
                     let error = null;
                     try {
                         const result = await this.xfaLayer.render(this.viewport, "display");
-                        if (result?.textDivs && this.textHighlighter) {
+                        if (result.textDivs && this.textHighlighter) {
                             this._buildXfaTextContentItems(result.textDivs);
                         }
                     } catch (ex) {
@@ -10158,9 +10158,9 @@
                     div.style.height = Math.floor(this.viewport.height) + "px";
                     const childNodes = div.childNodes,
                         zoomLayerNode = keepZoomLayer && this.zoomLayer || null,
-                        annotationLayerNode = keepAnnotationLayer && this.annotationLayer?.div || null,
-                        annotationEditorLayerNode = keepAnnotationEditorLayer && this.annotationEditorLayer?.div || null,
-                        xfaLayerNode = keepXfaLayer && this.xfaLayer?.div || null;
+                        annotationLayerNode = keepAnnotationLayer && this.annotationLayer.div || null,
+                        annotationEditorLayerNode = keepAnnotationEditorLayer && this.annotationEditorLayer.div || null,
+                        xfaLayerNode = keepXfaLayer && this.xfaLayer.div || null;
                     for (let i = childNodes.length - 1; i >= 0; i--) {
                         const node = childNodes[i];
                         switch (node) {
@@ -10179,7 +10179,7 @@
                     if (annotationEditorLayerNode) {
                         this.annotationEditorLayer.hide();
                     } else {
-                        this.annotationEditorLayer?.destroy();
+                        this.annotationEditorLayer.destroy();
                     }
                     if (xfaLayerNode) {
                         this.xfaLayer.hide();
@@ -10204,7 +10204,7 @@
                     }
                     this.loadingIconDiv.setAttribute("role", "img");
                     this.l10n.get("loading").then(msg => {
-                        this.loadingIconDiv?.setAttribute("aria-label", msg);
+                        this.loadingIconDiv.setAttribute("aria-label", msg);
                     });
                     div.append(this.loadingIconDiv);
                 }
@@ -10317,7 +10317,7 @@
                     if (this.xfaLayer && (!keepXfaLayer || !this.xfaLayer.div)) {
                         this.xfaLayer.cancel();
                         this.xfaLayer = null;
-                        this.textHighlighter?.disable();
+                        this.textHighlighter.disable();
                     }
                     if (this._onTextLayerRendered) {
                         this.eventBus._off("textlayerrendered", this._onTextLayerRendered);
@@ -10397,7 +10397,7 @@
                     return this.viewport.convertToPdfPoint(x, y);
                 }
                 toggleLoadingIconSpinner(viewVisible = false) {
-                    this.loadingIconDiv?.classList.toggle("notVisible", !viewVisible);
+                    this.loadingIconDiv.classList.toggle("notVisible", !viewVisible);
                 }
                 draw() {
                     if (this.renderingState !== _ui_utils.RenderingStates.INITIAL) {
@@ -10421,7 +10421,7 @@
                     canvasWrapper.style.width = div.style.width;
                     canvasWrapper.style.height = div.style.height;
                     canvasWrapper.classList.add("canvasWrapper");
-                    const lastDivBeforeTextDiv = this.annotationLayer?.div || this.annotationEditorLayer?.div;
+                    const lastDivBeforeTextDiv = this.annotationLayer.div || this.annotationEditorLayer.div;
                     if (lastDivBeforeTextDiv) {
                         lastDivBeforeTextDiv.before(canvasWrapper);
                     } else {
@@ -10558,7 +10558,7 @@
                             accessibilityManager: this._accessibilityManager
                         });
                     }
-                    if (this.xfaLayer?.div) {
+                    if (this.xfaLayer.div) {
                         div.append(this.xfaLayer.div);
                     }
                     let renderContinueCallback = null;
@@ -10911,7 +10911,7 @@
                     const node = children[nodeIndex];
                     this.#textNodes.delete(id);
                     let owns = node.getAttribute("aria-owns");
-                    if (owns?.includes(id)) {
+                    if (owns.includes(id)) {
                         owns = owns.split(" ").filter(x => x !== id).join(" ");
                         if (owns) {
                             node.setAttribute("aria-owns", owns);
@@ -10923,7 +10923,7 @@
                 }
                 #addIdToAriaOwns(id, node) {
                     const owns = node.getAttribute("aria-owns");
-                    if (!owns?.includes(id)) {
+                    if (!owns.includes(id)) {
                         node.setAttribute("aria-owns", owns ? `${owns} ${id}` : id);
                     }
                     node.removeAttribute("role");
@@ -11290,7 +11290,7 @@
                         }
                         clearedUntilDivIdx = match.end.divIdx + 1;
                     }
-                    if (!findController?.highlightMatches) {
+                    if (!findController.highlightMatches) {
                         return;
                     }
                     const pageMatches = findController.pageMatches[pageIdx] || null;
@@ -11353,8 +11353,8 @@
                     }
                     this.cancel();
                     this.textDivs.length = 0;
-                    this.highlighter?.setTextMapping(this.textDivs, this.textContentItemsStr);
-                    this.accessibilityManager?.setTextMapping(this.textDivs);
+                    this.highlighter.setTextMapping(this.textDivs, this.textContentItemsStr);
+                    this.accessibilityManager.setTextMapping(this.textDivs);
                     const textLayerFrag = document.createDocumentFragment();
                     this.textLayerRenderTask = (0, _pdfjsLib.renderTextLayer)({
                         textContent: this.textContent,
@@ -11368,8 +11368,8 @@
                     this.textLayerRenderTask.promise.then(() => {
                         this.textLayerDiv.append(textLayerFrag);
                         this.#finishRendering();
-                        this.highlighter?.enable();
-                        this.accessibilityManager?.enable();
+                        this.highlighter.enable();
+                        this.accessibilityManager.enable();
                     }, function (reason) { });
                 }
                 cancel() {
@@ -11377,8 +11377,8 @@
                         this.textLayerRenderTask.cancel();
                         this.textLayerRenderTask = null;
                     }
-                    this.highlighter?.disable();
-                    this.accessibilityManager?.disable();
+                    this.highlighter.disable();
+                    this.accessibilityManager.disable();
                 }
                 setTextContentStream(readableStream) {
                     this.cancel();
@@ -11994,7 +11994,7 @@
                             button.classList.toggle("toggled", checked);
                             button.setAttribute("aria-checked", checked);
                             button.disabled = disableButtons;
-                            toolbar?.classList.toggle("hidden", !checked);
+                            toolbar.classList.toggle("hidden", !checked);
                         }
                     };
                     this.eventBus._on("annotationeditormodechanged", editorModeChanged);
@@ -12278,7 +12278,7 @@
                     }
                     this.#initializedPromise = this._readFromStorage(this.#defaults).then(prefs => {
                         for (const name in this.#defaults) {
-                            const prefValue = prefs?.[name];
+                            const prefValue = prefs.[name];
                             if (typeof prefValue === typeof this.#defaults[name]) {
                                 this.#prefs[name] = prefValue;
                             }
@@ -13222,8 +13222,8 @@
                     baseURL: baseUrl,
                     filesize: contentLength,
                     filename: contentDispositionFilename || (0, _pdfjsLib.getFilenamenameFromUrl)(url),
-                    metadata: metadata?.getRaw(),
-                    authors: metadata?.get("dc:creator"),
+                    metadata: metadata.getRaw(),
+                    authors: metadata.get("dc:creator"),
                     numPages: pdfDocument.numPages,
                     URL: url
                 };
@@ -13746,7 +13746,7 @@
             }
             _app.PDFViewerApplication.run(config);
         }
-        document.blockUnblockOnload?.(true);
+        document.blockUnblockOnload.(true);
         if (document.readyState === "interactive" || document.readyState === "complete") {
             webViewerLoad();
         } else {
