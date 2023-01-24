@@ -27,7 +27,7 @@ public partial class PdfReader : IAsyncDisposable
     private ElementReference Element { get; set; }
 
     /// <summary>
-    /// 获得/设置 用于渲染的文件流,为空则用Filename参数读取文件
+    /// 获得/设置 用于渲染的文件流,为空则用 FileName 参数读取文件
     /// </summary>
     [Parameter]
     public Stream? Stream { get; set; }
@@ -36,7 +36,7 @@ public partial class PdfReader : IAsyncDisposable
     /// 获得/设置 PDF文件URL, 'http' 开头自动使用流模式读取
     /// </summary>
     [Parameter]
-    public string? Filename { get; set; }
+    public string? FileName { get; set; }
 
     /// <summary>
     /// 获得/设置 使用流化模式,可跨域读取文件. 默认为 false
@@ -45,7 +45,7 @@ public partial class PdfReader : IAsyncDisposable
     public bool StreamMode { get; set; }
 
     /// <summary>
-    /// [已过时,统一使用 Filename 简化参数] 获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
+    /// [已过时,统一使用 FileName 简化参数] 获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
     /// </summary>
     [Parameter]
     [Obsolete]
@@ -124,6 +124,17 @@ public partial class PdfReader : IAsyncDisposable
     [Parameter]
     public string ViewerBase { get; set; } = "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
 
+    /// <summary>
+    /// 获得/设置 禁用复制/打印/下载
+    /// </summary> 
+    [Parameter]
+    public bool ReadOnly { get; set; }     
+
+    /// <summary>
+    /// 获得/设置 水印内容
+    /// </summary> 
+    [Parameter]
+    public string? Watermark { get; set; } 
 
     /// <summary>
     /// Debug
@@ -173,25 +184,32 @@ public partial class PdfReader : IAsyncDisposable
     /// <param name="page">页码</param>
     /// <param name="pagemode">页面模式</param>
     /// <param name="zoom">缩放模式</param>
+    /// <param name="readOnly">禁用复制/打印/下载</param>
+    /// <param name="watermark">水印内容</param>
     /// <returns></returns>
-    public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null)
+    public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null, bool? readOnly= null, string? watermark = null)
     {
         ErrorMessage = null;
         try
         {
-            Search= search ?? Search;
-            Page = page?? Page;
-            Pagemode = pagemode?? Pagemode;
+            Search = search ?? Search;
+            Page = page ?? Page;
+            Pagemode = pagemode ?? Pagemode;
             Zoom = zoom ?? Zoom;
-
+            ReadOnly = readOnly ?? ReadOnly;
+            Watermark = watermark ?? Watermark;
+            if (ReadOnly || readOnly!=null)
+            {
+                ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
+            }
             if (Stream != null)
             {
                 await ShowPdf(Stream);
             }
-            else if (!string.IsNullOrEmpty(Filename) && StreamMode) //|| Filename.StartsWith("http")
+            else if (!string.IsNullOrEmpty(FileName) && StreamMode) //|| FileName.StartsWith("http")
             {
                 var client = new HttpClient();
-                var stream = await client.GetStreamAsync(UrlBase ?? "" + Filename);
+                var stream = await client.GetStreamAsync(UrlBase ?? "" + FileName);
                 if (stream != null)
                 {
                     await ShowPdf(stream);
@@ -215,7 +233,7 @@ public partial class PdfReader : IAsyncDisposable
 
     }
 
-    private string GenUrl(bool filemode = true) => $"{ViewerBase}?file={(filemode ? HttpUtility.UrlEncode(Filename) : "(1)")}#page={Page}&navpanes={(Navpanes ? 0 : 1)}&toolbar={(Toolbar ? 0 : 1)}&statusbar={(Statusbar ? 0 : 1)}&pagemode={(Pagemode ?? EnumPageMode.Thumbs).ToString().ToLower()}&search={Search}" + (Zoom != null ? $"&zoom={Zoom.GetEnumName()}" : "");
+    private string GenUrl(bool filemode = true) => $"{ViewerBase}?file={(filemode ? HttpUtility.UrlEncode(FileName) : "(1)")}#page={Page}&navpanes={(Navpanes ? 0 : 1)}&toolbar={(Toolbar ? 0 : 1)}&statusbar={(Statusbar ? 0 : 1)}&pagemode={(Pagemode ?? EnumPageMode.Thumbs).ToString().ToLower()}&search={Search}" + (Zoom != null ? $"&zoom={Zoom.GetEnumName()}" : "") + (Watermark != null ? $"&wm={Watermark}" : "");
  
 
     /// <summary>

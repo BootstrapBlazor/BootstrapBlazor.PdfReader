@@ -33,13 +33,19 @@ See https://github.com/adobe-type-tools/cmap-resources
     <link rel="resource" type="application/l10n" href="locale/locale.txt">
     <script src="../build/pdf.js"></script>
 
-    <script src="viewer.js"></script>
-    <script src="tools.js"></script>
+    <script src="viewerlimit.js"></script>
+    <script src="limit.js"></script>
 
 </head>
 
-<body tabindex="1" onload="onBodyLoad()">
+<body tabindex="1"
+      onload="onBodyLoad()"
+      oncontextmenu="window.event.returnValue=false"
+      oncopy="window.event.returnValue=false"
+      ondragstart="window.event.returnValue=false"
+      onselectstart="window.event.returnValue=false">
     <input type="text" id="watermark" value="" class="hidden">
+
     <div id="outerContainer">
 
         <div id="sidebarContainer">

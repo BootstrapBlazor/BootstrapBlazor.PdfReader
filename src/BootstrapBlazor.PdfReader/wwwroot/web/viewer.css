@@ -1,4 +1,4 @@
-/* Copyright 2014 Mozilla Foundation
+﻿/* Copyright 2014 Mozilla Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -3019,4 +3019,10 @@ dialog :link {
   #scaleSelectContainer {
     display: none;
   }
+}
+
+.cover {
+    position: absolute;
+    top: 0;
+    overflow: hidden
 }
