@@ -21,12 +21,12 @@ https://blazor.app1.es/pdfReaders
 
 3.razor页面
 ```
-<PdfReader Filename="pdf/sample.pdf" />
+<PdfReader FileName="pdf/sample.pdf" />
            
-<PdfReader Filename="https://blazor.app1.es/_content/DemoShared/sample.pdf" />
+<PdfReader FileName="https://blazor.app1.es/_content/DemoShared/sample.pdf" />
 
 <pre>流化方式,可跨域</pre>
-<PdfReader Filename="https://densen.es/test/webdev/pdf/sample.pdf" 
+<PdfReader FileName="https://densen.es/test/webdev/pdf/sample.pdf" 
            StreamMode="true"/> 
 ```
 
@@ -35,7 +35,7 @@ https://blazor.app1.es/pdfReaders
 
 |  参数   | 说明  | 默认值  | 旧版名称 |
 |  ----  | ----  | ----  |  ----  | 
-| Filename  | PDF文件路径(Url或相对路径) | null | 
+| FileName  | PDF文件路径(Url或相对路径) | null | Filename |
 | StreamMode  | 使用流化模式,可跨域读取文件 | false | EnableStreamingMode |
 | Width  | 宽 单位(px/%) | 100% | 
 | Height  | 高 单位(px/%) | 500px | 
@@ -54,6 +54,9 @@ https://blazor.app1.es/pdfReaders
 | Toolbar | 显示工具栏 | true |
 | Statusbar | 显示状态栏 | true |
 | Debug | 显示调试信息 | | 
+| AutoStreamMode | 'http' 开头自动使用流模式读取 | true | 
+
+** 7.1.4 参数 Filename 更改为 FileName **
 
 ** 7.1.3 移除pdfobject, 一些参数也被移除,请注意更改 **
 

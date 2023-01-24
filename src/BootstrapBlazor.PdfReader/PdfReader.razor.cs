@@ -33,7 +33,7 @@ public partial class PdfReader : IAsyncDisposable
     public Stream? Stream { get; set; }
 
     /// <summary>
-    /// 获得/设置 PDF文件URL, 'http' 开头自动使用流模式读取
+    /// 获得/设置 PDF文件URL, 默认'http' 开头自动使用流模式读取
     /// </summary>
     [Parameter]
     public string? FileName { get; set; }
@@ -43,13 +43,6 @@ public partial class PdfReader : IAsyncDisposable
     /// </summary>
     [Parameter]
     public bool StreamMode { get; set; }
-
-    /// <summary>
-    /// [已过时,统一使用 FileName 简化参数] 获得/设置 PDF文件基础路径, (使用流化模式才需要设置)
-    /// </summary>
-    [Parameter]
-    [Obsolete]
-    public string? UrlBase { get; set; }
 
     /// <summary>
     /// 获得/设置 宽 单位(px|%) 默认 100%
@@ -142,6 +135,14 @@ public partial class PdfReader : IAsyncDisposable
     [Parameter]
     public bool Debug { get; set; }
 
+
+    /// <summary>
+    /// 获得/设置 'http' 开头自动使用流模式读取
+    /// </summary> 
+    [Parameter]
+    public bool AutoStreamMode { get; set; } = true;
+
+
     string? ErrorMessage { get; set; }
 
     private string? Url { get; set; }
@@ -206,10 +207,10 @@ public partial class PdfReader : IAsyncDisposable
             {
                 await ShowPdf(Stream);
             }
-            else if (!string.IsNullOrEmpty(FileName) && StreamMode) //|| FileName.StartsWith("http")
+            else if (!string.IsNullOrEmpty(FileName) && (StreamMode || (AutoStreamMode && FileName.StartsWith("http"))))
             {
                 var client = new HttpClient();
-                var stream = await client.GetStreamAsync(UrlBase ?? "" + FileName);
+                var stream = await client.GetStreamAsync(FileName);
                 if (stream != null)
                 {
                     await ShowPdf(stream);
