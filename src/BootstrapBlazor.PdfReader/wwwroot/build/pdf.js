@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @licstart The following is the entire license notice for the
  * JavaScript code in this page
  *
@@ -1173,7 +1173,7 @@ class PDFDocumentLoadingTask {
   }
   async destroy() {
     this.destroyed = true;
-    await this._transport.destroy();
+    await this._transport?.destroy();
     this._transport = null;
     if (this._worker) {
       this._worker.destroy();
@@ -1410,7 +1410,7 @@ class PDFPageProxy {
     return this._jsActionsPromise ||= this._transport.getPageJSActions(this._pageIndex);
   }
   async getXfa() {
-    return this._transport._htmlForXfa.children[this._pageIndex] || null;
+    return this._transport._htmlForXfa?.children[this._pageIndex] || null;
   }
   render({
     canvasContext,
@@ -1425,7 +1425,7 @@ class PDFPageProxy {
     pageColors = null,
     printAnnotationStorage = null
   }) {
-    this._stats.time("Overall");
+    this._stats?.time("Overall");
     const intentArgs = this._transport.getRenderingIntent(intent, annotationMode, printAnnotationStorage);
     this.pendingCleanup = false;
     if (!optionalContentConfigPromise) {
@@ -1452,7 +1452,7 @@ class PDFPageProxy {
         lastChunk: false,
         separateAnnots: null
       };
-      this._stats.time("Page Request");
+      this._stats?.time("Page Request");
       this._pumpOperatorList(intentArgs);
     }
     const complete = error => {
@@ -1470,8 +1470,8 @@ class PDFPageProxy {
       } else {
         internalRenderTask.capability.resolve();
       }
-      this._stats.timeEnd("Rendering");
-      this._stats.timeEnd("Overall");
+      this._stats?.timeEnd("Rendering");
+      this._stats?.timeEnd("Overall");
     };
     const internalRenderTask = new InternalRenderTask({
       callback: complete,
@@ -1498,7 +1498,7 @@ class PDFPageProxy {
         complete();
         return;
       }
-      this._stats.time("Rendering");
+      this._stats?.time("Rendering");
       internalRenderTask.initializeGraphics({
         transparency,
         optionalContentConfig
@@ -1536,7 +1536,7 @@ class PDFPageProxy {
         lastChunk: false,
         separateAnnots: null
       };
-      this._stats.time("Page Request");
+      this._stats?.time("Page Request");
       this._pumpOperatorList(intentArgs);
     }
     return intentState.opListReadCapability.promise;
@@ -1654,8 +1654,8 @@ class PDFPageProxy {
     if (!intentState) {
       return;
     }
-    this._stats.timeEnd("Page Request");
-    intentState.displayReadyCapability.resolve(transparency);
+    this._stats?.timeEnd("Page Request");
+    intentState.displayReadyCapability?.resolve(transparency);
   }
   _renderPageChunk(operatorListChunk, intentState) {
     for (let i = 0, ii = operatorListChunk.length; i < ii; i++) {
@@ -1800,9 +1800,9 @@ exports.PDFWorkerUtil = PDFWorkerUtil;
     PDFWorkerUtil.isWorkerDisabled = true;
     PDFWorkerUtil.fallbackWorkerSrc = "./pdf.worker.js";
   } else if (typeof document === "object") {
-    const pdfjsFilePath = document.currentScript.src;
+    const pdfjsFilePath = document?.currentScript?.src;
     if (pdfjsFilePath) {
-      PDFWorkerUtil.fallbackWorkerSrc = pdfjsFilePath.replace(/(\.(?:min\.)?js)(\.*)?$/i, ".worker$1$2");
+      PDFWorkerUtil.fallbackWorkerSrc = pdfjsFilePath.replace(/(\.(?:min\.)?js)(\?.*)?$/i, ".worker$1$2");
     }
   }
   PDFWorkerUtil.isSameOrigin = function (baseUrl, otherUrl) {
@@ -1975,7 +1975,7 @@ class PDFWorker {
     }
   }
   static fromPort(params) {
-    if (!params.port) {
+    if (!params?.port) {
       throw new Error("PDFWorker.fromPort - invalid method signature.");
     }
     if (this.#workerPorts.has(params.port)) {
@@ -1997,7 +1997,7 @@ class PDFWorker {
   }
   static get _mainThreadWorkerMessageHandler() {
     try {
-      return globalThis.pdfjsWorker.WorkerMessageHandler || null;
+      return globalThis.pdfjsWorker?.WorkerMessageHandler || null;
     } catch (ex) {
       return null;
     }
@@ -2181,10 +2181,10 @@ class WorkerTransport {
       fullReader.headersReady.then(() => {
         if (!fullReader.isStreamingSupported || !fullReader.isRangeSupported) {
           if (this._lastProgress) {
-            loadingTask.onProgress.(this._lastProgress);
+            loadingTask.onProgress?.(this._lastProgress);
           }
           fullReader.onProgress = evt => {
-            loadingTask.onProgress.({
+            loadingTask.onProgress?.({
               loaded: evt.loaded,
               total: evt.total
             });
@@ -2284,7 +2284,7 @@ class WorkerTransport {
       return this._passwordCapability.promise;
     });
     messageHandler.on("DataLoaded", data => {
-      loadingTask.onProgress.({
+      loadingTask.onProgress?.({
         loaded: data.length,
         total: data.length
       });
@@ -2314,7 +2314,7 @@ class WorkerTransport {
             break;
           }
           let fontRegistry = null;
-          if (params.pdfBug && globalThis.FontInspector.enabled) {
+          if (params.pdfBug && globalThis.FontInspector?.enabled) {
             fontRegistry = {
               registerFont(font, url) {
                 globalThis.FontInspector.fontAdded(font, url);
@@ -2370,7 +2370,7 @@ class WorkerTransport {
               length = width * height * 4;
               pageProxy._bitmaps.add(bitmap);
             } else {
-              length = imageData.data.length || 0;
+              length = imageData.data?.length || 0;
             }
             if (length > MAX_IMAGE_SIZE_TO_STORE) {
               pageProxy.cleanupAfterRender = true;
@@ -2388,7 +2388,7 @@ class WorkerTransport {
       if (this.destroyed) {
         return;
       }
-      loadingTask.onProgress.({
+      loadingTask.onProgress?.({
         loaded: data.loaded,
         total: data.total
       });
@@ -2428,7 +2428,7 @@ class WorkerTransport {
     if (this.destroyed) {
       return;
     }
-    this.loadingTask.onUnsupportedFeature.(featureId);
+    this.loadingTask.onUnsupportedFeature?.(featureId);
   }
   getData() {
     return this.messageHandler.sendWithPromise("GetData", null);
@@ -2441,7 +2441,7 @@ class WorkerTransport {
       isPureXfa: !!this._htmlForXfa,
       numPages: this._numPages,
       annotationStorage: this.annotationStorage.serializable,
-      filename: this._fullReader.filename ?? null
+      filename: this._fullReader?.filename ?? null
     }).finally(() => {
       this.annotationStorage.resetModified();
     });
@@ -2553,8 +2553,8 @@ class WorkerTransport {
       return {
         info: results[0],
         metadata: results[1] ? new _metadata.Metadata(results[1]) : null,
-        contentDispositionFilename: this._fullReader.filename ?? null,
-        contentLength: this._fullReader.contentLength ?? null
+        contentDispositionFilename: this._fullReader?.filename ?? null,
+        contentLength: this._fullReader?.contentLength ?? null
       };
     });
   }
@@ -2607,14 +2607,14 @@ class PDFObjects {
       return null;
     }
     const obj = this.#objs[objId];
-    if (!obj.capability.settled) {
+    if (!obj?.capability.settled) {
       throw new Error(`Requesting object that isn't resolved yet ${objId}.`);
     }
     return obj.data;
   }
   has(objId) {
     const obj = this.#objs[objId];
-    return obj.capability.settled || false;
+    return obj?.capability.settled || false;
   }
   resolve(objId, data = null) {
     const obj = this.#ensureObj(objId);
@@ -2647,7 +2647,7 @@ class RenderTask {
     const {
       annotationCanvasMap
     } = this.#internalRenderTask;
-    return separateAnnots.form || separateAnnots.canvas && annotationCanvasMap.size > 0;
+    return separateAnnots.form || separateAnnots.canvas && annotationCanvasMap?.size > 0;
   }
 }
 exports.RenderTask = RenderTask;
@@ -2706,7 +2706,7 @@ class InternalRenderTask {
       }
       InternalRenderTask.#canvasInUse.add(this._canvas);
     }
-    if (this._pdfBug && globalThis.StepperManager.enabled) {
+    if (this._pdfBug && globalThis.StepperManager?.enabled) {
       this.stepper = globalThis.StepperManager.create(this._pageIndex);
       this.stepper.init(this.operatorList);
       this.stepper.nextBreakPoint = this.stepper.getNextBreakPoint();
@@ -2728,12 +2728,12 @@ class InternalRenderTask {
     });
     this.operatorListIdx = 0;
     this.graphicsReady = true;
-    this.graphicsReadyCallback.();
+    this.graphicsReadyCallback?.();
   }
   cancel(error = null) {
     this.running = false;
     this.cancelled = true;
-    this.gfx.endDrawing();
+    this.gfx?.endDrawing();
     if (this._canvas) {
       InternalRenderTask.#canvasInUse.delete(this._canvas);
     }
@@ -2746,7 +2746,7 @@ class InternalRenderTask {
       }
       return;
     }
-    this.stepper.updateOperatorList(this.operatorList);
+    this.stepper?.updateOperatorList(this.operatorList);
     if (this.running) {
       return;
     }
@@ -2986,7 +2986,7 @@ class AnnotationEditor {
       return;
     }
     const target = event.relatedTarget;
-    if (target.closest(`#${this.id}`)) {
+    if (target?.closest(`#${this.id}`)) {
       return;
     }
     event.preventDefault();
@@ -3157,7 +3157,7 @@ class AnnotationEditor {
     return this.div && !this.isAttachedToDOM;
   }
   rebuild() {
-    this.div.addEventListener("focusin", this.#boundFocusin);
+    this.div?.addEventListener("focusin", this.#boundFocusin);
   }
   serialize() {
     (0, _util.unreachable)("An editor must be serializable");
@@ -3185,10 +3185,10 @@ class AnnotationEditor {
     this.parent.remove(this);
   }
   select() {
-    this.div.classList.add("selectedEditor");
+    this.div?.classList.add("selectedEditor");
   }
   unselect() {
-    this.div.classList.remove("selectedEditor");
+    this.div?.classList.remove("selectedEditor");
   }
   updateParams(type, value) {}
   disableEditing() {}
@@ -3549,7 +3549,7 @@ class AnnotationEditorUIManager {
     }
   }
   keydown(event) {
-    if (!this.getActive().shouldGetKeyboardEvents()) {
+    if (!this.getActive()?.shouldGetKeyboardEvents()) {
       AnnotationEditorUIManager._keyboardManager.exec(this, event);
     }
   }
@@ -3802,7 +3802,7 @@ class AnnotationEditorUIManager {
     });
   }
   commitOrRemove() {
-    this.#activeEditor.commitOrRemove();
+    this.#activeEditor?.commitOrRemove();
   }
   #selectEditors(editors) {
     this.#selectedEditors.clear();
@@ -4600,7 +4600,7 @@ class FontLoader {
     }
   }
   get isFontLoadingAPISupported() {
-    const hasFonts = !!this._document.fonts;
+    const hasFonts = !!this._document?.fonts;
     return (0, _util.shadow)(this, "isFontLoadingAPISupported", hasFonts);
   }
   get isSyncFontLoadingSupported() {
@@ -4609,7 +4609,7 @@ class FontLoader {
       supported = true;
     } else {
       const m = /Mozilla\/5.0.*?rv:(\d+).*? Gecko/.exec(navigator.userAgent);
-      if (m.[1] >= 14) {
+      if (m?.[1] >= 14) {
         supported = true;
       }
     }
@@ -4739,7 +4739,7 @@ class FontFaceObject {
       }
       nativeFontFace = new FontFace(this.cssFontInfo.fontFamily, this.data, css);
     }
-    this.fontRegistry.registerFont(this);
+    this.fontRegistry?.registerFont(this);
     return nativeFontFace;
   }
   createFontFaceRule() {
@@ -4758,7 +4758,7 @@ class FontFaceObject {
       }
       rule = `@font-face {font-family:"${this.cssFontInfo.fontFamily}";${css}src:${url}}`;
     }
-    this.fontRegistry.registerFont(this, url);
+    this.fontRegistry?.registerFont(this, url);
     return rule;
   }
   getPathGenerator(objs, character) {
@@ -5545,8 +5545,8 @@ class CanvasGraphics {
     this.viewportScale = 1;
     this.outputScaleX = 1;
     this.outputScaleY = 1;
-    this.backgroundColor = pageColors.background || null;
-    this.foregroundColor = pageColors.foreground || null;
+    this.backgroundColor = pageColors?.background || null;
+    this.foregroundColor = pageColors?.foreground || null;
     this._cachedScaleForStroking = null;
     this._cachedGetSinglePixelWidth = null;
     this._cachedBitmapsMap = new Map();
@@ -6046,7 +6046,7 @@ class CanvasGraphics {
     const strokeColor = this.current.strokeColor;
     ctx.globalAlpha = this.current.strokeAlpha;
     if (this.contentVisible) {
-      if (typeof strokeColor === "object" && strokeColor.getPattern) {
+      if (typeof strokeColor === "object" && strokeColor?.getPattern) {
         ctx.save();
         ctx.strokeStyle = strokeColor.getPattern(ctx, this, (0, _display_utils.getCurrentTransformInverse)(ctx), _pattern_helper.PathType.STROKE);
         this.rescaleAndStroke(false);
@@ -6505,12 +6505,12 @@ class CanvasGraphics {
     this.current.patternFill = true;
   }
   setStrokeRGBColor(r, g, b) {
-    const color = this.selectColor.(r, g, b) || _util.Util.makeHexColor(r, g, b);
+    const color = this.selectColor?.(r, g, b) || _util.Util.makeHexColor(r, g, b);
     this.ctx.strokeStyle = color;
     this.current.strokeColor = color;
   }
   setFillRGBColor(r, g, b) {
-    const color = this.selectColor.(r, g, b) || _util.Util.makeHexColor(r, g, b);
+    const color = this.selectColor?.(r, g, b) || _util.Util.makeHexColor(r, g, b);
     this.ctx.fillStyle = color;
     this.current.fillColor = color;
     this.current.patternFill = false;
@@ -8254,7 +8254,7 @@ class PDFDataTransportStream {
     this._progressiveDone = params.progressiveDone || false;
     this._contentDispositionFilename = params.contentDispositionFilename || null;
     const initialData = params.initialData;
-    if (initialData.length > 0) {
+    if (initialData?.length > 0) {
       const buffer = new Uint8Array(initialData).buffer;
       this._queuedChunks.push(buffer);
     }
@@ -8306,22 +8306,22 @@ class PDFDataTransportStream {
     }
   }
   get _progressiveDataLength() {
-    return this._fullRequestReader._loaded ?? 0;
+    return this._fullRequestReader?._loaded ?? 0;
   }
   _onProgress(evt) {
     if (evt.total === undefined) {
-      this._rangeReaders[0].onProgress.({
+      this._rangeReaders[0]?.onProgress?.({
         loaded: evt.loaded
       });
     } else {
-      this._fullRequestReader.onProgress.({
+      this._fullRequestReader?.onProgress?.({
         loaded: evt.loaded,
         total: evt.total
       });
     }
   }
   _onProgressiveDone() {
-    this._fullRequestReader.progressiveDone();
+    this._fullRequestReader?.progressiveDone();
     this._progressiveDone = true;
   }
   _removeRangeReader(reader) {
@@ -8346,7 +8346,7 @@ class PDFDataTransportStream {
     return reader;
   }
   cancelAllRequests(reason) {
-    this._fullRequestReader.cancel(reason);
+    this._fullRequestReader?.cancel(reason);
     for (const reader of this._rangeReaders.slice(0)) {
       reader.cancel(reason);
     }
@@ -8529,7 +8529,7 @@ class XfaText {
         str = node.value;
       } else if (!XfaText.shouldBuildText(name)) {
         return;
-      } else if (node.attributes.textContent) {
+      } else if (node?.attributes?.textContent) {
         str = node.attributes.textContent;
       } else if (node.value) {
         str = node.value;
@@ -8713,7 +8713,7 @@ class AnnotationEditorLayer {
   }
   detach(editor) {
     this.#editors.delete(editor.id);
-    this.#accessibilityManager.removePointerInTextLayer(editor.contentDiv);
+    this.#accessibilityManager?.removePointerInTextLayer(editor.contentDiv);
   }
   remove(editor) {
     this.#uiManager.removeEditor(editor);
@@ -8738,7 +8738,7 @@ class AnnotationEditorLayer {
     }
     this.attach(editor);
     editor.pageIndex = this.pageIndex;
-    editor.parent.detach(editor);
+    editor.parent?.detach(editor);
     editor.parent = this;
     if (editor.div && editor.isAttachedToDOM) {
       editor.div.remove();
@@ -8759,7 +8759,7 @@ class AnnotationEditorLayer {
     this.addToAnnotationStorage(editor);
   }
   moveEditorInDOM(editor) {
-    this.#accessibilityManager.moveElementInDOM(this.div, editor.div, editor.contentDiv, true);
+    this.#accessibilityManager?.moveElementInDOM(this.div, editor.div, editor.contentDiv, true);
   }
   addToAnnotationStorage(editor) {
     if (!editor.isEmpty() && !this.annotationStorage.has(editor.id)) {
@@ -8895,11 +8895,11 @@ class AnnotationEditorLayer {
     event.preventDefault();
   }
   destroy() {
-    if (this.#uiManager.getActive().parent === this) {
+    if (this.#uiManager.getActive()?.parent === this) {
       this.#uiManager.setActiveEditor(null);
     }
     for (const editor of this.#editors.values()) {
-      this.#accessibilityManager.removePointerInTextLayer(editor.contentDiv);
+      this.#accessibilityManager?.removePointerInTextLayer(editor.contentDiv);
       editor.isAttachedToDOM = false;
       editor.div.remove();
       editor.parent = null;
@@ -9214,8 +9214,8 @@ class FreeTextEditor extends _editor.AnnotationEditor {
     this.editorDiv.className = "internal";
     this.editorDiv.setAttribute("id", this.#editorDivId);
     this.enableEditing();
-    FreeTextEditor._l10nPromise.get("editor_free_text2_aria_label").then(msg => this.editorDiv.setAttribute("aria-label", msg));
-    FreeTextEditor._l10nPromise.get("free_text2_default_content").then(msg => this.editorDiv.setAttribute("default-content", msg));
+    FreeTextEditor._l10nPromise.get("editor_free_text2_aria_label").then(msg => this.editorDiv?.setAttribute("aria-label", msg));
+    FreeTextEditor._l10nPromise.get("free_text2_default_content").then(msg => this.editorDiv?.setAttribute("default-content", msg));
     this.editorDiv.contentEditable = true;
     const {
       style
@@ -9656,7 +9656,7 @@ class InkEditor extends _editor.AnnotationEditor {
     this.canvas = document.createElement("canvas");
     this.canvas.width = this.canvas.height = 0;
     this.canvas.className = "inkEditorCanvas";
-    InkEditor._l10nPromise.get("editor_ink_canvas_aria_label").then(msg => this.canvas.setAttribute("aria-label", msg));
+    InkEditor._l10nPromise.get("editor_ink_canvas_aria_label").then(msg => this.canvas?.setAttribute("aria-label", msg));
     this.div.append(this.canvas);
     this.ctx = this.canvas.getContext("2d");
   }
@@ -9687,7 +9687,7 @@ class InkEditor extends _editor.AnnotationEditor {
       baseY = this.y;
     }
     super.render();
-    InkEditor._l10nPromise.get("editor_ink2_aria_label").then(msg => this.div.setAttribute("aria-label", msg));
+    InkEditor._l10nPromise.get("editor_ink2_aria_label").then(msg => this.div?.setAttribute("aria-label", msg));
     const [x, y, w, h] = this.#getInitialBBox();
     this.setAt(x, y, 0, 0);
     this.setDims(w, h);
@@ -10526,7 +10526,7 @@ class AnnotationElement {
     const commonActions = this._commonActions;
     for (const name of Object.keys(jsEvent.detail)) {
       const action = actions[name] || commonActions[name];
-      action.(jsEvent);
+      action?.(jsEvent);
     }
   }
   _setDefaultPropertiesFromJS(element) {
@@ -10661,7 +10661,7 @@ class LinkAnnotationElement extends AnnotationElement {
   constructor(parameters, options = null) {
     super(parameters, {
       isRenderable: true,
-      ignoreBorder: !!options.ignoreBorder,
+      ignoreBorder: !!options?.ignoreBorder,
       createQuadrilaterals: true
     });
     this.isTooltipOnly = parameters.data.isTooltipOnly;
@@ -10741,7 +10741,7 @@ class LinkAnnotationElement extends AnnotationElement {
   _bindAttachment(link, attachment) {
     link.href = this.linkService.getAnchorUrl("");
     link.onclick = () => {
-      this.downloadManager.openOrDownloadData(this.container, attachment.content, attachment.filename);
+      this.downloadManager?.openOrDownloadData(this.container, attachment.content, attachment.filename);
       return false;
     };
     this.#setInternalLink();
@@ -10763,7 +10763,7 @@ class LinkAnnotationElement extends AnnotationElement {
         continue;
       }
       link[jsName] = () => {
-        this.linkService.eventBus.dispatch("dispatcheventinsandbox", {
+        this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
           source: this,
           detail: {
             id: data.id,
@@ -10792,7 +10792,7 @@ class LinkAnnotationElement extends AnnotationElement {
       return;
     }
     link.onclick = () => {
-      otherClickAction.();
+      otherClickAction?.();
       const {
         fields: resetFormFields,
         refs: resetFormRefs,
@@ -10868,7 +10868,7 @@ class LinkAnnotationElement extends AnnotationElement {
         domElement.dispatchEvent(new Event("resetform"));
       }
       if (this.enableScripting) {
-        this.linkService.eventBus.dispatch("dispatcheventinsandbox", {
+        this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
           source: this,
           detail: {
             id: "app",
@@ -10883,7 +10883,7 @@ class LinkAnnotationElement extends AnnotationElement {
 }
 class TextAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable
     });
@@ -10921,7 +10921,7 @@ class WidgetAnnotationElement extends AnnotationElement {
   _setEventListener(element, baseName, eventName, valueGetter) {
     if (baseName.includes("mouse")) {
       element.addEventListener(baseName, event => {
-        this.linkService.eventBus.dispatch("dispatcheventinsandbox", {
+        this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
           source: this,
           detail: {
             id: this.data.id,
@@ -10934,7 +10934,7 @@ class WidgetAnnotationElement extends AnnotationElement {
       });
     } else {
       element.addEventListener(baseName, event => {
-        this.linkService.eventBus.dispatch("dispatcheventinsandbox", {
+        this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
           source: this,
           detail: {
             id: this.data.id,
@@ -10947,7 +10947,7 @@ class WidgetAnnotationElement extends AnnotationElement {
   }
   _setEventListeners(element, names, getter) {
     for (const [baseName, eventName] of names) {
-      if (eventName === "Action" || this.data.actions.[eventName]) {
+      if (eventName === "Action" || this.data.actions?.[eventName]) {
         this._setEventListener(element, baseName, eventName, getter);
       }
     }
@@ -11124,7 +11124,7 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
               storage.setValue(id, {
                 value
               });
-              this.linkService.eventBus.dispatch("dispatcheventinsandbox", {
+              this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
                 source: this,
                 detail: {
                   id,
@@ -11159,7 +11159,7 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
             return;
           }
           elementData.userValue = value;
-          this.linkService.eventBus.dispatch("dispatcheventinsandbox", {
+          this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
             source: this,
             detail: {
               id,
@@ -11180,7 +11180,7 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
           } = event.target;
           elementData.userValue = value;
           if (this._mouseState.isDown && elementData.valueOnFocus !== value) {
-            this.linkService.eventBus.dispatch("dispatcheventinsandbox", {
+            this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
               source: this,
               detail: {
                 id,
@@ -11195,7 +11195,7 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
           }
           _blurListener(event);
         });
-        if (this.data.actions.Keystroke) {
+        if (this.data.actions?.Keystroke) {
           element.addEventListener("beforeinput", event => {
             const {
               data,
@@ -11237,7 +11237,7 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
                 break;
             }
             event.preventDefault();
-            this.linkService.eventBus.dispatch("dispatcheventinsandbox", {
+            this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
               source: this,
               detail: {
                 id,
@@ -11525,7 +11525,7 @@ class ChoiceWidgetAnnotationElement extends WidgetAnnotationElement {
       selectElement.addEventListener("updatefromsandbox", jsEvent => {
         const actions = {
           value(event) {
-            removeEmptyEntry.();
+            removeEmptyEntry?.();
             const value = event.detail.value;
             const values = new Set(Array.isArray(value) ? value : [value]);
             for (const option of selectElement.options) {
@@ -11629,7 +11629,7 @@ class ChoiceWidgetAnnotationElement extends WidgetAnnotationElement {
         storage.setValue(id, {
           value: exportValue
         });
-        this.linkService.eventBus.dispatch("dispatcheventinsandbox", {
+        this.linkService.eventBus?.dispatch("dispatcheventinsandbox", {
           source: this,
           detail: {
             id,
@@ -11665,7 +11665,7 @@ class PopupAnnotationElement extends AnnotationElement {
     const {
       data
     } = parameters;
-    const isRenderable = !PopupAnnotationElement.IGNORE_TYPES.has(data.parentType) && !!(data.titleObj.str || data.contentsObj.str || data.richText.str);
+    const isRenderable = !PopupAnnotationElement.IGNORE_TYPES.has(data.parentType) && !!(data.titleObj?.str || data.contentsObj?.str || data.richText?.str);
     super(parameters, {
       isRenderable
     });
@@ -11741,7 +11741,7 @@ class PopupElement {
       });
       popup.append(modificationDate);
     }
-    if (this.richText.str && (!this.contentsObj.str || this.contentsObj.str === this.richText.str)) {
+    if (this.richText?.str && (!this.contentsObj?.str || this.contentsObj.str === this.richText.str)) {
       _xfa_layer.XfaLayer.render({
         xfaHtml: this.richText.html,
         intent: "richText",
@@ -11809,7 +11809,7 @@ class PopupElement {
 }
 class FreeTextAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true
@@ -11837,7 +11837,7 @@ class FreeTextAnnotationElement extends AnnotationElement {
 }
 class LineAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true
@@ -11867,7 +11867,7 @@ class LineAnnotationElement extends AnnotationElement {
 }
 class SquareAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true
@@ -11898,7 +11898,7 @@ class SquareAnnotationElement extends AnnotationElement {
 }
 class CircleAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true
@@ -11929,7 +11929,7 @@ class CircleAnnotationElement extends AnnotationElement {
 }
 class PolylineAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true
@@ -11972,7 +11972,7 @@ class PolygonAnnotationElement extends PolylineAnnotationElement {
 }
 class CaretAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true
@@ -11988,7 +11988,7 @@ class CaretAnnotationElement extends AnnotationElement {
 }
 class InkAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true
@@ -12026,7 +12026,7 @@ class InkAnnotationElement extends AnnotationElement {
 }
 class HighlightAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true,
@@ -12046,7 +12046,7 @@ class HighlightAnnotationElement extends AnnotationElement {
 }
 class UnderlineAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true,
@@ -12066,7 +12066,7 @@ class UnderlineAnnotationElement extends AnnotationElement {
 }
 class SquigglyAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true,
@@ -12086,7 +12086,7 @@ class SquigglyAnnotationElement extends AnnotationElement {
 }
 class StrikeOutAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true,
@@ -12106,7 +12106,7 @@ class StrikeOutAnnotationElement extends AnnotationElement {
 }
 class StampAnnotationElement extends AnnotationElement {
   constructor(parameters) {
-    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj.str || parameters.data.contentsObj.str || parameters.data.richText.str);
+    const isRenderable = !!(parameters.data.hasPopup || parameters.data.titleObj?.str || parameters.data.contentsObj?.str || parameters.data.richText?.str);
     super(parameters, {
       isRenderable,
       ignoreBorder: true
@@ -12131,7 +12131,7 @@ class FileAttachmentAnnotationElement extends AnnotationElement {
     } = this.data.file;
     this.filename = (0, _display_utils.getFilenameFromUrl)(filename, true);
     this.content = content;
-    this.linkService.eventBus.dispatch("fileattachmentannotation", {
+    this.linkService.eventBus?.dispatch("fileattachmentannotation", {
       source: this,
       filename,
       content
@@ -12142,14 +12142,14 @@ class FileAttachmentAnnotationElement extends AnnotationElement {
     const trigger = document.createElement("div");
     trigger.className = "popupTriggerArea";
     trigger.addEventListener("dblclick", this._download.bind(this));
-    if (!this.data.hasPopup && (this.data.titleObj.str || this.data.contentsObj.str || this.data.richText)) {
+    if (!this.data.hasPopup && (this.data.titleObj?.str || this.data.contentsObj?.str || this.data.richText)) {
       this._createPopup(trigger, this.data);
     }
     this.container.append(trigger);
     return this.container;
   }
   _download() {
-    this.downloadManager.openOrDownloadData(this.container, this.content, this.filename);
+    this.downloadManager?.openOrDownloadData(this.container, this.content, this.filename);
   }
 }
 class AnnotationLayer {
@@ -12157,7 +12157,7 @@ class AnnotationLayer {
     const contentElement = element.firstChild || element;
     contentElement.id = `${_display_utils.AnnotationPrefix}${id}`;
     div.append(element);
-    accessibilityManager.moveElementInDOM(div, element, contentElement, false);
+    accessibilityManager?.moveElementInDOM(div, element, contentElement, false);
   }
   static render(parameters) {
     const {
@@ -12494,7 +12494,7 @@ class XfaLayer {
         continue;
       }
       let childHtml;
-      if (child.attributes.xmlns) {
+      if (child?.attributes?.xmlns) {
         childHtml = document.createElementNS(child.attributes.xmlns, name);
       } else {
         childHtml = document.createElement(name);
@@ -12695,7 +12695,7 @@ class TextLayerRenderTask {
     this._viewport = viewport;
     this._textDivs = textDivs || [];
     this._textContentItemsStr = textContentItemsStr || [];
-    this._fontInspectorEnabled = !!globalThis.FontInspector.enabled;
+    this._fontInspectorEnabled = !!globalThis.FontInspector?.enabled;
     this._reader = null;
     this._layoutTextLastFontSize = null;
     this._layoutTextLastFontFamily = null;
@@ -13618,7 +13618,7 @@ exports.SVGGraphics = SVGGraphics;
     }
     endText() {
       const current = this.current;
-      if (current.textRenderingMode & _util.TextRenderingMode.ADD_TO_PATH_FLAG && current.txtElement.hasChildNodes()) {
+      if (current.textRenderingMode & _util.TextRenderingMode.ADD_TO_PATH_FLAG && current.txtElement?.hasChildNodes()) {
         current.element = current.txtElement;
         this.clip("nonzero");
         this.endPath();
@@ -13981,7 +13981,7 @@ exports.SVGGraphics = SVGGraphics;
       element.setAttributeNS(null, "stroke-dashoffset", pf(lineWidthScale * current.dashPhase) + "px");
     }
     eoFill() {
-      this.current.element.setAttributeNS(null, "fill-rule", "evenodd");
+      this.current.element?.setAttributeNS(null, "fill-rule", "evenodd");
       this.fill();
     }
     fillStroke() {
@@ -13989,7 +13989,7 @@ exports.SVGGraphics = SVGGraphics;
       this.fill();
     }
     eoFillStroke() {
-      this.current.element.setAttributeNS(null, "fill-rule", "evenodd");
+      this.current.element?.setAttributeNS(null, "fill-rule", "evenodd");
       this.fillStroke();
     }
     closeStroke() {
@@ -14164,7 +14164,7 @@ class PDFNodeStream {
     this._rangeRequestReaders = [];
   }
   get _progressiveDataLength() {
-    return this._fullRequestReader._loaded ?? 0;
+    return this._fullRequestReader?._loaded ?? 0;
   }
   getFullReader() {
     (0, _util.assert)(!this._fullRequestReader, "PDFNodeStream.getFullReader can only be called once.");
@@ -14180,7 +14180,7 @@ class PDFNodeStream {
     return rangeReader;
   }
   cancelAllRequests(reason) {
-    this._fullRequestReader.cancel(reason);
+    this._fullRequestReader?.cancel(reason);
     for (const reader of this._rangeRequestReaders.slice(0)) {
       reader.cancel(reason);
     }
@@ -14240,7 +14240,7 @@ class BaseFullReader {
       return this.read();
     }
     this._loaded += chunk.length;
-    this.onProgress.({
+    this.onProgress?.({
       loaded: this._loaded,
       total: this._contentLength
     });
@@ -14314,7 +14314,7 @@ class BaseRangeReader {
       return this.read();
     }
     this._loaded += chunk.length;
-    this.onProgress.({
+    this.onProgress?.({
       loaded: this._loaded
     });
     const buffer = new Uint8Array(chunk).buffer;
@@ -14773,7 +14773,7 @@ class NetworkManager {
     if (!pendingRequest) {
       return;
     }
-    pendingRequest.onProgress.(evt);
+    pendingRequest.onProgress?.(evt);
   }
   onStateChange(xhrId, evt) {
     const pendingRequest = this.pendingRequests[xhrId];
@@ -14793,13 +14793,13 @@ class NetworkManager {
     }
     delete this.pendingRequests[xhrId];
     if (xhr.status === 0 && this.isHttp) {
-      pendingRequest.onError.(xhr.status);
+      pendingRequest.onError?.(xhr.status);
       return;
     }
     const xhrStatus = xhr.status || OK_RESPONSE;
     const ok_response_on_range_request = xhrStatus === OK_RESPONSE && pendingRequest.expectedStatus === PARTIAL_CONTENT_RESPONSE;
     if (!ok_response_on_range_request && xhrStatus !== pendingRequest.expectedStatus) {
-      pendingRequest.onError.(xhr.status);
+      pendingRequest.onError?.(xhr.status);
       return;
     }
     const chunk = getArrayBuffer(xhr);
@@ -14816,7 +14816,7 @@ class NetworkManager {
         chunk
       });
     } else {
-      pendingRequest.onError.(xhr.status);
+      pendingRequest.onError?.(xhr.status);
     }
   }
   getRequestXhr(xhrId) {
@@ -14860,7 +14860,7 @@ class PDFNetworkStream {
     return reader;
   }
   cancelAllRequests(reason) {
-    this._fullRequestReader.cancel(reason);
+    this._fullRequestReader?.cancel(reason);
     for (const reader of this._rangeRequestReaders.slice(0)) {
       reader.cancel(reason);
     }
@@ -14953,7 +14953,7 @@ class PDFNetworkStreamFullRequestReader {
     this._cachedChunks.length = 0;
   }
   _onProgress(evt) {
-    this.onProgress.({
+    this.onProgress?.({
       loaded: evt.loaded,
       total: evt.lengthComputable ? evt.total : this._contentLength
     });
@@ -15028,7 +15028,7 @@ class PDFNetworkStreamRangeRequestReader {
     this.onClosed = null;
   }
   _close() {
-    this.onClosed.(this);
+    this.onClosed?.(this);
   }
   _onDone(data) {
     const chunk = data.chunk;
@@ -15061,7 +15061,7 @@ class PDFNetworkStreamRangeRequestReader {
   }
   _onProgress(evt) {
     if (!this.isStreamingSupported) {
-      this.onProgress.({
+      this.onProgress?.({
         loaded: evt.loaded
       });
     }
@@ -15150,7 +15150,7 @@ class PDFFetchStream {
     this._rangeRequestReaders = [];
   }
   get _progressiveDataLength() {
-    return this._fullRequestReader._loaded ?? 0;
+    return this._fullRequestReader?._loaded ?? 0;
   }
   getFullReader() {
     (0, _util.assert)(!this._fullRequestReader, "PDFFetchStream.getFullReader can only be called once.");
@@ -15166,7 +15166,7 @@ class PDFFetchStream {
     return reader;
   }
   cancelAllRequests(reason) {
-    this._fullRequestReader.cancel(reason);
+    this._fullRequestReader?.cancel(reason);
     for (const reader of this._rangeRequestReaders.slice(0)) {
       reader.cancel(reason);
     }
@@ -15248,7 +15248,7 @@ class PDFFetchStreamReader {
       };
     }
     this._loaded += value.byteLength;
-    this.onProgress.({
+    this.onProgress?.({
       loaded: this._loaded,
       total: this._contentLength
     });
@@ -15259,7 +15259,7 @@ class PDFFetchStreamReader {
     };
   }
   cancel(reason) {
-    this._reader.cancel(reason);
+    this._reader?.cancel(reason);
     this._abortController.abort();
   }
 }
@@ -15301,7 +15301,7 @@ class PDFFetchStreamRangeReader {
       };
     }
     this._loaded += value.byteLength;
-    this.onProgress.({
+    this.onProgress?.({
       loaded: this._loaded
     });
     const buffer = new Uint8Array(value).buffer;
@@ -15311,7 +15311,7 @@ class PDFFetchStreamRangeReader {
     };
   }
   cancel(reason) {
-    this._reader.cancel(reason);
+    this._reader?.cancel(reason);
     this._abortController.abort();
   }
 }
