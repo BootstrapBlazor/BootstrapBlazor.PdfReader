@@ -76,7 +76,7 @@ v7.1.4
 v7.1.3 
 - 移除pdfobject, 一些参数也被移除,请注意更改
 
-- | 移除参数 | 
+| 移除参数 | 
 | ----  | 
 | UrlBase | 
 | View |
@@ -84,7 +84,7 @@ v7.1.3
 v7.1
 - 移除pdfobject, 一些参数也被移除,请注意更改
 
-- | 移除参数 | 
+| 移除参数 | 
 | ----  | 
 | Func<string, Task>? OnInfo | 
 | Func<string, Task>? OnError | 
