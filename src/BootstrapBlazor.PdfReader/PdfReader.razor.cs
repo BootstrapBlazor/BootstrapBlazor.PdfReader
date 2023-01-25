@@ -157,7 +157,7 @@ public partial class PdfReader : IAsyncDisposable
     {
         if (firstRender)
         {
-            Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.PdfReader/app.js");
+            Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", $"./_content/BootstrapBlazor.PdfReader/app.js{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}");
             await Refresh();
         }
     }
@@ -191,6 +191,7 @@ public partial class PdfReader : IAsyncDisposable
     /// <param name="zoom">缩放模式</param>
     /// <param name="readOnly">禁用复制/打印/下载</param>
     /// <param name="watermark">水印内容</param>
+    /// <param name="compatibilityMode">兼容模式,兼容旧版浏览器</param>
     /// <returns></returns>
     public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null, bool? readOnly= null, string? watermark = null, bool? compatibilityMode = null)
     {
@@ -203,6 +204,7 @@ public partial class PdfReader : IAsyncDisposable
             Zoom = zoom ?? Zoom;
             ReadOnly = readOnly ?? ReadOnly;
             Watermark = watermark ?? Watermark;
+            CompatibilityMode = compatibilityMode ?? CompatibilityMode;
             if (CompatibilityMode || compatibilityMode != null)
             {
                 ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/2.6.347/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";

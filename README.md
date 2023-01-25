@@ -55,19 +55,33 @@ https://blazor.app1.es/pdfReaders
 | Statusbar | 显示状态栏 | true |
 | Debug | 显示调试信息 | | 
 | AutoStreamMode | 'http' 开头自动使用流模式读取 | true | 
+| CompatibilityMode | 兼容模式,兼容旧版浏览器 | false | 
 
-** 7.1.4 参数 Filename 更改为 FileName **
+---
+#### 更新历史
 
-** 7.1.3 移除pdfobject, 一些参数也被移除,请注意更改 **
+v7.1.6 
+- 添加 CompatibilityMode : 兼容模式,兼容旧版浏览器
 
-| 移除参数 | 
+v7.1.5 
+- 添加 AutoStreamMode: 'http' 开头自动使用流模式读取
+- 添加 Watermark : 水印内容
+
+v7.1.4
+- Filename 更改为 FileName
+
+v7.1.3 
+- 移除pdfobject, 一些参数也被移除,请注意更改
+
+- | 移除参数 | 
 | ----  | 
 | UrlBase | 
 | View |
 
-** 7.1 移除pdfobject, 一些参数也被移除,请注意更改 **
+v7.1
+- 移除pdfobject, 一些参数也被移除,请注意更改
 
-| 移除参数 | 
+- | 移除参数 | 
 | ----  | 
 | Func<string, Task>? OnInfo | 
 | Func<string, Task>? OnError | 
