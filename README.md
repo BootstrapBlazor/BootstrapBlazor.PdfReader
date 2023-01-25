@@ -55,6 +55,8 @@ https://blazor.app1.es/pdfReaders
 | Statusbar | 显示状态栏 | true |
 | Debug | 显示调试信息 | | 
 | AutoStreamMode | 'http' 开头自动使用流模式读取 | true | 
+| Watermark | 水印内容 | | 
+| ReadOnly | 禁用复制/打印/下载 | | 
 | CompatibilityMode | 兼容模式,兼容旧版浏览器 | false | 
 
 ---
