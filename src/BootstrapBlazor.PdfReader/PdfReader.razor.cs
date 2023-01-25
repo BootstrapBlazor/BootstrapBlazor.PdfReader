@@ -135,13 +135,17 @@ public partial class PdfReader : IAsyncDisposable
     [Parameter]
     public bool Debug { get; set; }
 
-
     /// <summary>
     /// 获得/设置 'http' 开头自动使用流模式读取
     /// </summary> 
     [Parameter]
     public bool AutoStreamMode { get; set; } = true;
 
+    /// <summary>
+    /// 获得/设置 兼容模式,兼容旧版浏览器 默认为 false
+    /// </summary> 
+    [Parameter]
+    public bool CompatibilityMode { get; set; }     
 
     string? ErrorMessage { get; set; }
 
@@ -188,7 +192,7 @@ public partial class PdfReader : IAsyncDisposable
     /// <param name="readOnly">禁用复制/打印/下载</param>
     /// <param name="watermark">水印内容</param>
     /// <returns></returns>
-    public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null, bool? readOnly= null, string? watermark = null)
+    public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null, bool? readOnly= null, string? watermark = null, bool? compatibilityMode = null)
     {
         ErrorMessage = null;
         try
@@ -199,7 +203,11 @@ public partial class PdfReader : IAsyncDisposable
             Zoom = zoom ?? Zoom;
             ReadOnly = readOnly ?? ReadOnly;
             Watermark = watermark ?? Watermark;
-            if (ReadOnly || readOnly!=null)
+            if (CompatibilityMode || compatibilityMode != null)
+            {
+                ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/2.6.347/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
+            }
+            else if (ReadOnly || readOnly!=null)
             {
                 ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
             }
