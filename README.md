@@ -60,12 +60,13 @@ https://blazor.app1.es/pdfReaders
 ---
 #### 更新历史
 
-v7.1.6 
+v7.1.7 
 - 添加 CompatibilityMode : 兼容模式,兼容旧版浏览器
 
 v7.1.5 
 - 添加 AutoStreamMode: 'http' 开头自动使用流模式读取
 - 添加 Watermark : 水印内容
+- 添加 ReadOnly : 禁用复制/打印/下载
 
 v7.1.4
 - Filename 更改为 FileName
