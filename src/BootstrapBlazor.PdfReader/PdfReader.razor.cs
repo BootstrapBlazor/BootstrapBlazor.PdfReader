@@ -121,13 +121,13 @@ public partial class PdfReader : IAsyncDisposable
     /// 获得/设置 禁用复制/打印/下载
     /// </summary> 
     [Parameter]
-    public bool ReadOnly { get; set; }     
+    public bool ReadOnly { get; set; }
 
     /// <summary>
     /// 获得/设置 水印内容
     /// </summary> 
     [Parameter]
-    public string? Watermark { get; set; } 
+    public string? Watermark { get; set; }
 
     /// <summary>
     /// Debug
@@ -145,7 +145,7 @@ public partial class PdfReader : IAsyncDisposable
     /// 获得/设置 兼容模式,兼容旧版浏览器 默认为 false
     /// </summary> 
     [Parameter]
-    public bool CompatibilityMode { get; set; }     
+    public bool CompatibilityMode { get; set; }
 
     string? ErrorMessage { get; set; }
 
@@ -157,7 +157,7 @@ public partial class PdfReader : IAsyncDisposable
     {
         if (firstRender)
         {
-            Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", $"./_content/BootstrapBlazor.PdfReader/app.js{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}");
+            Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.PdfReader/app.js" + "?v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
             await Refresh();
         }
     }
@@ -166,21 +166,21 @@ public partial class PdfReader : IAsyncDisposable
     /// 刷新组件
     /// </summary>
     /// <returns></returns>
-    public virtual async Task Refresh() => await Refresh(null,null,null,null);
+    public virtual async Task Refresh() => await Refresh(null, null, null, null);
 
     /// <summary>
     /// 跳转页码
     /// </summary>
     /// <param name="page">页码</param>
     /// <returns></returns>
-    public virtual async Task NavigateToPage(int page) => await Refresh(page:page);
+    public virtual async Task NavigateToPage(int page) => await Refresh(page: page);
 
     /// <summary>
     /// 刷新组件
     /// </summary>
     /// <param name="page">页码</param>
     /// <returns></returns>
-    public virtual async Task Refresh(int page) => await Refresh(page:page);
+    public virtual async Task Refresh(int page) => await Refresh(page: page);
 
     /// <summary>
     /// 刷新组件
@@ -193,7 +193,7 @@ public partial class PdfReader : IAsyncDisposable
     /// <param name="watermark">水印内容</param>
     /// <param name="compatibilityMode">兼容模式,兼容旧版浏览器</param>
     /// <returns></returns>
-    public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null, bool? readOnly= null, string? watermark = null, bool? compatibilityMode = null)
+    public virtual async Task Refresh(string? search = null, int? page = null, EnumPageMode? pagemode = null, EnumZoomMode? zoom = null, bool? readOnly = null, string? watermark = null, bool? compatibilityMode = null)
     {
         ErrorMessage = null;
         try
@@ -209,7 +209,7 @@ public partial class PdfReader : IAsyncDisposable
             {
                 ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/2.6.347/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
             }
-            else if (ReadOnly || readOnly!=null)
+            else if (ReadOnly || readOnly != null)
             {
                 ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
             }
@@ -245,7 +245,7 @@ public partial class PdfReader : IAsyncDisposable
     }
 
     private string GenUrl(bool filemode = true) => $"{ViewerBase}?file={(filemode ? HttpUtility.UrlEncode(FileName) : "(1)")}#page={Page}&navpanes={(Navpanes ? 0 : 1)}&toolbar={(Toolbar ? 0 : 1)}&statusbar={(Statusbar ? 0 : 1)}&pagemode={(Pagemode ?? EnumPageMode.Thumbs).ToString().ToLower()}&search={Search}" + (Zoom != null ? $"&zoom={Zoom.GetEnumName()}" : "") + (Watermark != null ? $"&wm={Watermark}" : "");
- 
+
 
     /// <summary>
     /// 打开 stream
@@ -254,7 +254,7 @@ public partial class PdfReader : IAsyncDisposable
     {
         Url = null;
         var url = GenUrl(false);
-        UrlDebug= url;
+        UrlDebug = url;
         using var streamRef = new DotNetStreamReference(stream);
         await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
     }
