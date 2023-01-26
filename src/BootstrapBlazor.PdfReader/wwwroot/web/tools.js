@@ -4,7 +4,8 @@ function onBodyLoad() {
     if (getQueryVariable("wm"))
     { 
         document.getElementById("watermark").value = getQueryVariable("wm");
-    }
+    } 
+    console.log(navigator.userAgent); 
 }
 
 function getQueryVariable(variable) {

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @licstart The following is the entire license notice for the
  * Javascript code in this page
  *
@@ -29169,8 +29169,8 @@ var Type1Font = function Type1FontClosure() {
     var eexecBlockParser = new _type1_parser.Type1Parser(eexecBlock.stream, true, SEAC_ANALYSIS_ENABLED);
     var data = eexecBlockParser.extractFontProgram(properties);
 
-    for (const key in data.txt) {
-      properties[key] = data.txt[key];
+    for (const key in data.properties) {
+      properties[key] = data.properties[key];
     }
 
     var charstrings = data.charstrings;
@@ -29382,7 +29382,7 @@ var Type1Font = function Type1FontClosure() {
 
 var CFFFont = function CFFFontClosure() {
   function CFFFont(file, properties) {
-    this.txt = properties;
+    this.properties = properties;
     var parser = new _cff_parser.CFFParser(file, properties, SEAC_ANALYSIS_ENABLED);
     this.cff = parser.parse();
     this.cff.duplicateFirstGlyph();
@@ -29407,7 +29407,7 @@ var CFFFont = function CFFFontClosure() {
     },
     getGlyphMapping: function CFFFont_getGlyphMapping() {
       var cff = this.cff;
-      var properties = this.txt;
+      var properties = this.properties;
       var charsets = cff.charset.charset;
       var charCodeToGlyphId;
       var glyphId;
@@ -29680,12 +29680,12 @@ var CFFParser = function CFFParserClosure() {
   class CFFParser {
     constructor(file, properties, seacAnalysisEnabled) {
       this.bytes = file.getBytes();
-      this.txt = properties;
+      this.properties = properties;
       this.seacAnalysisEnabled = !!seacAnalysisEnabled;
     }
 
     parse() {
-      var properties = this.txt;
+      var properties = this.properties;
       var cff = new CFF();
       this.cff = cff;
       var header = this.parseHeader();
@@ -40102,7 +40102,7 @@ var Type1Parser = function Type1ParserClosure() {
               length = this.readInt();
               this.getToken();
               data = length > 0 ? stream.getBytes(length) : new Uint8Array(0);
-              lenIV = program.txt.privateData.lenIV;
+              lenIV = program.properties.privateData.lenIV;
               encoded = this.readCharStrings(data, lenIV);
               this.nextChar();
               token = this.getToken();
@@ -40128,7 +40128,7 @@ var Type1Parser = function Type1ParserClosure() {
               length = this.readInt();
               this.getToken();
               data = length > 0 ? stream.getBytes(length) : new Uint8Array(0);
-              lenIV = program.txt.privateData.lenIV;
+              lenIV = program.properties.privateData.lenIV;
               encoded = this.readCharStrings(data, lenIV);
               this.nextChar();
               token = this.getToken();
@@ -40149,19 +40149,19 @@ var Type1Parser = function Type1ParserClosure() {
             var blueArray = this.readNumberArray();
 
             if (blueArray.length > 0 && blueArray.length % 2 === 0 && HINTING_ENABLED) {
-              program.txt.privateData[token] = blueArray;
+              program.properties.privateData[token] = blueArray;
             }
 
             break;
 
           case "StemSnapH":
           case "StemSnapV":
-            program.txt.privateData[token] = this.readNumberArray();
+            program.properties.privateData[token] = this.readNumberArray();
             break;
 
           case "StdHW":
           case "StdVW":
-            program.txt.privateData[token] = this.readNumberArray()[0];
+            program.properties.privateData[token] = this.readNumberArray()[0];
             break;
 
           case "BlueShift":
@@ -40170,11 +40170,11 @@ var Type1Parser = function Type1ParserClosure() {
           case "BlueScale":
           case "LanguageGroup":
           case "ExpansionFactor":
-            program.txt.privateData[token] = this.readNumber();
+            program.properties.privateData[token] = this.readNumber();
             break;
 
           case "ForceBold":
-            program.txt.privateData[token] = this.readBoolean();
+            program.properties.privateData[token] = this.readBoolean();
             break;
         }
       }

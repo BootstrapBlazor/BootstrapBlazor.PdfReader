@@ -9,6 +9,7 @@ using Microsoft.JSInterop;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Intrinsics.Arm;
 using System.Web;
+using UAParser;
 
 namespace BootstrapBlazor.Components;
 
@@ -147,10 +148,18 @@ public partial class PdfReader : IAsyncDisposable
     [Parameter]
     public bool CompatibilityMode { get; set; }
 
+    /// <summary>
+    /// 获得/设置 兼容模式,兼容旧版不支持es5的浏览器 默认为 false
+    /// <para>Compatible with older browsers that do not support ES5</para>
+    /// </summary> 
+    [Parameter]
+    public bool CompatibilityNoneES5 { get; set; }
+
     string? ErrorMessage { get; set; }
 
     private string? Url { get; set; }
     private string? UrlDebug { get; set; }
+    private ClientInfo? ClientInfo { get; set; }
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -158,6 +167,9 @@ public partial class PdfReader : IAsyncDisposable
         if (firstRender)
         {
             Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.PdfReader/app.js" + "?v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+            var userAgent = await Module!.InvokeAsync<string>("getUserAgent");
+            var parser = Parser.GetDefault();
+            ClientInfo = parser.Parse(userAgent); 
             await Refresh();
         }
     }
@@ -205,14 +217,21 @@ public partial class PdfReader : IAsyncDisposable
             ReadOnly = readOnly ?? ReadOnly;
             Watermark = watermark ?? Watermark;
             CompatibilityMode = compatibilityMode ?? CompatibilityMode;
-            if (CompatibilityMode || compatibilityMode != null)
+            
+            if (CompatibilityNoneES5 || (ClientInfo!=null && ClientInfo.UA.Family.StartsWith("Chrome" ) == true && Convert.ToInt32(ClientInfo.UA.Major) < 97))
             {
-                ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/2.6.347/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
+                CompatibilityMode = true;
+                ViewerBase = "/_content/BootstrapBlazor.PdfReader/compat/web/viewer.html";
+            }
+            else if(CompatibilityMode || (ClientInfo != null && ClientInfo.UA.Family.StartsWith("Chrome") == true && Convert.ToInt32(ClientInfo.UA.Major) < 109))
+            {
+                ViewerBase = "/_content/BootstrapBlazor.PdfReader/2.6.347/web/viewer.html";
             }
             else if (ReadOnly || readOnly != null)
             {
                 ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
             }
+            
             if (Stream != null)
             {
                 await ShowPdf(Stream);

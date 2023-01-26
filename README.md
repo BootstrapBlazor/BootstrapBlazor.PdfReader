@@ -58,9 +58,17 @@ https://blazor.app1.es/pdfReaders
 | Watermark | 水印内容 | | 
 | ReadOnly | 禁用复制/打印/下载 | | 
 | CompatibilityMode | 兼容模式,兼容旧版浏览器 | false | 
+| CompatibilityNoneES5 | 兼容模式,兼容旧版不支持es5的浏览器 | false | 
 
 ---
 #### 更新历史
+
+v7.1.8 
+- 添加 CompatibilityNoneES5 : 兼容模式,兼容旧版不支持es5的浏览器
+- Chrome < 97 自动使用 2.4.456 版本
+- Chrome < 109 自动使用 2.6.347 版本
+- 注:ReadOnly 和 Watermark 在这两种兼容模式下不能使用
+
 
 v7.1.7 
 - 添加 CompatibilityMode : 兼容模式,兼容旧版浏览器

@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Version>7.1.7</Version>
+        <Version>7.1.8</Version>
         <PackageProjectUrl>https://github.com/densen2014/BootstrapBlazor.PdfReader</PackageProjectUrl>
         <RepositoryUrl>https://github.com/densen2014/BootstrapBlazor.PdfReader</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -24,6 +24,10 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="UAParser" Version="3.1.47" />
     </ItemGroup>
 
     <!-- 通过移除正常的引用并替换成固定版本的引用，达到无论如何更新都无法生效的目的。 -->
