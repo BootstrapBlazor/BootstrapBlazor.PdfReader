@@ -43,6 +43,9 @@
 [cak]
 @import url(cak/viewer.txt)
 
+[ckb]
+@import url(ckb/viewer.txt)
+
 [cs]
 @import url(cs/viewer.txt)
 
@@ -103,6 +106,9 @@
 [fr]
 @import url(fr/viewer.txt)
 
+[fur]
+@import url(fur/viewer.txt)
+
 [fy-NL]
 @import url(fy-NL/viewer.txt)
 
@@ -138,6 +144,9 @@
 
 [hy-AM]
 @import url(hy-AM/viewer.txt)
+
+[hye]
+@import url(hye/viewer.txt)
 
 [ia]
 @import url(ia/viewer.txt)
@@ -187,6 +196,9 @@
 [lv]
 @import url(lv/viewer.txt)
 
+[meh]
+@import url(meh/viewer.txt)
+
 [mk]
 @import url(mk/viewer.txt)
 
@@ -235,14 +247,26 @@
 [ru]
 @import url(ru/viewer.txt)
 
+[sat]
+@import url(sat/viewer.txt)
+
+[sc]
+@import url(sc/viewer.txt)
+
 [scn]
 @import url(scn/viewer.txt)
+
+[sco]
+@import url(sco/viewer.txt)
 
 [si]
 @import url(si/viewer.txt)
 
 [sk]
 @import url(sk/viewer.txt)
+
+[skr]
+@import url(skr/viewer.txt)
 
 [sl]
 @import url(sl/viewer.txt)
@@ -259,11 +283,17 @@
 [sv-SE]
 @import url(sv-SE/viewer.txt)
 
+[szl]
+@import url(szl/viewer.txt)
+
 [ta]
 @import url(ta/viewer.txt)
 
 [te]
 @import url(te/viewer.txt)
+
+[tg]
+@import url(tg/viewer.txt)
 
 [th]
 @import url(th/viewer.txt)
