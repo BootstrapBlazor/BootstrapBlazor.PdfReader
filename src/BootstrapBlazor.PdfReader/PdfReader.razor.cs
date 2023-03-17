@@ -155,12 +155,23 @@ public partial class PdfReader : IAsyncDisposable
     [Parameter]
     public bool CompatibilityNoneES5 { get; set; }
 
+    /// <summary>
+    /// 组件渲染加载完成后回调事件，ShowPdf方法需要在此后事件后调用才生效
+    /// </summary>
+    [Parameter]
+    public EventCallback Loaded { get; set; }
+
+    /// <summary>
+    /// 组件是否已加载完成，包括JS脚本的加载
+    /// </summary>
+    public bool IsLoaded { get; private set; } = false;
+
     string? ErrorMessage { get; set; }
 
     private string? Url { get; set; }
     private string? UrlDebug { get; set; }
     private ClientInfo? ClientInfo { get; set; }
-
+    
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -169,8 +180,10 @@ public partial class PdfReader : IAsyncDisposable
             Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.PdfReader/app.js" + "?v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
             var userAgent = await Module!.InvokeAsync<string>("getUserAgent");
             var parser = Parser.GetDefault();
-            ClientInfo = parser.Parse(userAgent); 
+            ClientInfo = parser.Parse(userAgent);
             await Refresh();
+            IsLoaded = true;
+            await Loaded.InvokeAsync(this);
         }
     }
 
@@ -217,13 +230,13 @@ public partial class PdfReader : IAsyncDisposable
             ReadOnly = readOnly ?? ReadOnly;
             Watermark = watermark ?? Watermark;
             CompatibilityMode = compatibilityMode ?? CompatibilityMode;
-            
-            if (CompatibilityNoneES5 || (ClientInfo!=null && ClientInfo.UA.Family.StartsWith("Chrome" ) == true && Convert.ToInt32(ClientInfo.UA.Major) < 97))
+
+            if (CompatibilityNoneES5 || (ClientInfo != null && ClientInfo.UA.Family.StartsWith("Chrome") == true && Convert.ToInt32(ClientInfo.UA.Major) < 97))
             {
                 CompatibilityMode = true;
                 ViewerBase = "/_content/BootstrapBlazor.PdfReader/compat/web/viewer.html";
             }
-            else if(CompatibilityMode || (ClientInfo != null && ClientInfo.UA.Family.StartsWith("Chrome") == true && Convert.ToInt32(ClientInfo.UA.Major) < 109))
+            else if (CompatibilityMode || (ClientInfo != null && ClientInfo.UA.Family.StartsWith("Chrome") == true && Convert.ToInt32(ClientInfo.UA.Major) < 109))
             {
                 ViewerBase = "/_content/BootstrapBlazor.PdfReader/2.6.347/web/viewer.html";
             }
@@ -231,7 +244,7 @@ public partial class PdfReader : IAsyncDisposable
             {
                 ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
             }
-            
+
             if (Stream != null)
             {
                 await ShowPdf(Stream);
@@ -271,11 +284,14 @@ public partial class PdfReader : IAsyncDisposable
     /// </summary>
     public virtual async Task ShowPdf(Stream stream)
     {
-        Url = null;
-        var url = GenUrl(false);
-        UrlDebug = url;
-        using var streamRef = new DotNetStreamReference(stream);
-        await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
+        if (Module is not null)
+        {
+            Url = null;
+            var url = GenUrl(false);
+            UrlDebug = url;
+            using var streamRef = new DotNetStreamReference(stream);
+            await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
+        }
     }
 
     /// <summary>
