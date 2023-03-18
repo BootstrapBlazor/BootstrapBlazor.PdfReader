@@ -63,6 +63,9 @@ https://blazor.app1.es/pdfReaders
 ---
 #### 更新历史
 
+v7.1.9 
+- 升级兼容模式版本,修复移动端手势缩放,部分文件字体无法正常加载.(感谢Ponderfly的PR)
+
 v7.1.8 
 - 添加 CompatibilityNoneES5 : 兼容模式,兼容旧版不支持es5的浏览器
 - Chrome < 97 自动使用 2.4.456 版本
