@@ -62,6 +62,8 @@ https://blazor.app1.es/pdfReaders
 
 ---
 #### 更新历史
+v7.1.10
+- 修复直接使用组件 ShowPdf 方法报错.
 
 v7.1.9 
 - 升级兼容模式版本,修复移动端手势缩放,部分文件字体无法正常加载.(感谢Ponderfly的PR)

@@ -271,11 +271,18 @@ public partial class PdfReader : IAsyncDisposable
     /// </summary>
     public virtual async Task ShowPdf(Stream stream)
     {
-        Url = null;
-        var url = GenUrl(false);
-        UrlDebug = url;
-        using var streamRef = new DotNetStreamReference(stream);
-        await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
+        if (Module == null)
+        {
+            Stream=stream; 
+        }
+        else
+        {
+            Url = null;
+            var url = GenUrl(false);
+            UrlDebug = url;
+            using var streamRef = new DotNetStreamReference(stream);
+            await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
+        }
     }
 
     /// <summary>
