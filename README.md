@@ -45,6 +45,7 @@ https://blazor.app1.es/pdfReaders
 | Zoom | 缩放模式, EnumZoomMode 类型 | Auto |
 | Search | 查询字符串 | | 
 | Refresh() | 刷新组件 | |
+| ShowPdf(Stream stream) | 从 stream 渲染PDF | |
 | NavigateToPage(int page) | 跳转页码 | |
 | Refresh(int page) | 跳转页码 | |
 | Refresh(string? search, int? page, EnumPageMode? pagemode, EnumZoomMode? zoom) | 刷新组件(查询关键字,页码,页面模式,缩放模式) | |
