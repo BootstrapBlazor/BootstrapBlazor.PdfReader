@@ -65,7 +65,7 @@ public enum EnumZoomMode
 /// </summary>
 
 
-public static class EnumExtensions
+static class EnumExtensions
 {
 
     /// <summary>
