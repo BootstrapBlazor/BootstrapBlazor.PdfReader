@@ -30,7 +30,19 @@ https://blazor.app1.es/pdfReaders
            StreamMode="true"/> 
 ```
 
-4.参数说明 
+4.在服务端工程的Program.cs或Startup.cs文件中设置StaticFiles中间件的StaticFileOptions参数，允许访问扩展名为bcmap的静态文件。
+``` csharp
+app.UseStaticFiles(new StaticFileOptions()
+{
+    ServeUnknownFileTypes = true
+});
+```
+否则，获取character maps文件时，Console将可能出现如下告警，导致PDF文件无法正确渲染。
+> Warning: loadFont - translateFont failed: "Error: fetchBuiltInCMap: failed to fetch file "../web/cmaps/xxx.bcmap" with "".".  
+> util.js:429 Warning: Error during font loading: fetchBuiltInCMap: failed to fetch file "../web/cmaps/xxx.bcmap" with "".
+
+
+5.参数说明 
 
 
 |  参数   | 说明  | 默认值  | 旧版名称 |
