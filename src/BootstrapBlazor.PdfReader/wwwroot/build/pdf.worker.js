@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @licstart The following is the entire license notice for the
  * JavaScript code in this page
  *
@@ -8557,7 +8557,7 @@ class PartialEvaluator {
     }
     let data;
     if (this.options.cMapUrl !== null) {
-      const url = `${this.options.cMapUrl}${name}.bcmap`;
+      const url = `${this.options.cMapUrl}${name}.txt`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`fetchBuiltInCMap: failed to fetch file "${url}" with "${response.statusText}".`);
@@ -37244,20 +37244,20 @@ const getStdFontMap = (0, _core_utils.getLookupTableFactory)(function (t) {
 });
 exports.getStdFontMap = getStdFontMap;
 const getFontNameToFileMap = (0, _core_utils.getLookupTableFactory)(function (t) {
-  t.Courier = "FoxitFixed.pfb";
-  t["Courier-Bold"] = "FoxitFixedBold.pfb";
-  t["Courier-BoldOblique"] = "FoxitFixedBoldItalic.pfb";
-  t["Courier-Oblique"] = "FoxitFixedItalic.pfb";
-  t.Helvetica = "FoxitSans.pfb";
-  t["Helvetica-Bold"] = "FoxitSansBold.pfb";
-  t["Helvetica-BoldOblique"] = "FoxitSansBoldItalic.pfb";
-  t["Helvetica-Oblique"] = "FoxitSansItalic.pfb";
-  t["Times-Roman"] = "FoxitSerif.pfb";
-  t["Times-Bold"] = "FoxitSerifBold.pfb";
-  t["Times-BoldItalic"] = "FoxitSerifBoldItalic.pfb";
-  t["Times-Italic"] = "FoxitSerifItalic.pfb";
-  t.Symbol = "FoxitSymbol.pfb";
-  t.ZapfDingbats = "FoxitDingbats.pfb";
+  t.Courier = "FoxitFixed.txt";
+  t["Courier-Bold"] = "FoxitFixedBold.txt";
+  t["Courier-BoldOblique"] = "FoxitFixedBoldItalic.txt";
+  t["Courier-Oblique"] = "FoxitFixedItalic.txt";
+  t.Helvetica = "FoxitSans.txt";
+  t["Helvetica-Bold"] = "FoxitSansBold.txt";
+  t["Helvetica-BoldOblique"] = "FoxitSansBoldItalic.txt";
+  t["Helvetica-Oblique"] = "FoxitSansItalic.txt";
+  t["Times-Roman"] = "FoxitSerif.txt";
+  t["Times-Bold"] = "FoxitSerifBold.txt";
+  t["Times-BoldItalic"] = "FoxitSerifBoldItalic.txt";
+  t["Times-Italic"] = "FoxitSerifItalic.txt";
+  t.Symbol = "FoxitSymbol.txt";
+  t.ZapfDingbats = "FoxitDingbats.txt";
   t["LiberationSans-Regular"] = "LiberationSans-Regular.ttf";
   t["LiberationSans-Bold"] = "LiberationSans-Bold.ttf";
   t["LiberationSans-Italic"] = "LiberationSans-Italic.ttf";
