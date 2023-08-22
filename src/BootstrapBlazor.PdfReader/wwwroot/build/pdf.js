@@ -4344,7 +4344,7 @@ class BaseCMapReaderFactory {
     if (!name) {
       throw new Error("CMap name must be specified.");
     }
-    const url = this.baseUrl + name + (this.isCompressed ? ".bcmap" : "");
+    const url = this.baseUrl + name + (this.isCompressed ? ".txt" : "");
     const compressionType = this.isCompressed ? _util.CMapCompressionType.BINARY : _util.CMapCompressionType.NONE;
     return this._fetchData(url, compressionType).catch(reason => {
       throw new Error(`Unable to load ${this.isCompressed ? "binary " : ""}CMap at: ${url}`);
