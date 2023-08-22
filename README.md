@@ -64,7 +64,7 @@ https://blazor.app1.es/pdfReaders
 ---
 #### 更新历史
 
-v7.1.11-beta
+v7.2.0
 - 兼容 .pfb 和 .bcmap
  
 v7.1.10
