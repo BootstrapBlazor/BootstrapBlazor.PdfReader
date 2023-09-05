@@ -16,7 +16,8 @@
         <RootNamespace>BootstrapBlazor.PdfReader</RootNamespace>
         <AssemblyOriginatorKeyFile>..\keys\Longbow.Utility.snk</AssemblyOriginatorKeyFile>
          <SignAssembly>True</SignAssembly>
-   </PropertyGroup>
+        <OutputPath>..\..\..\Bin</OutputPath>
+    </PropertyGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.10" />
