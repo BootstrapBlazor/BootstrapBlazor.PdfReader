@@ -32,7 +32,7 @@ public enum EnumPageMode
     /// </summary> 
 
     Layers,
-    
+
     /// <summary>
     /// SidebarView.NONE;
     /// </summary>

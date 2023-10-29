@@ -40,7 +40,7 @@ public enum EnumZoomMode
 
     [Description("page-height")]
     PageHeight,
-    
+
     [Description("pref")]
     Pref,
 
@@ -58,14 +58,15 @@ public enum EnumZoomMode
 
     [Description("200")]
     Zoom200,
-     
+
 }
+
 /// <summary>
 /// Enum 扩展方法
 /// </summary>
 
 
-static class EnumExtensions
+internal static class EnumExtensions
 {
 
     /// <summary>
