@@ -7,7 +7,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Intrinsics.Arm;
 using System.Web;
 using UAParser;
 
@@ -32,6 +31,7 @@ public partial class PdfReader : IAsyncDisposable
     /// </summary>
     [Parameter]
     public Stream? Stream { get; set; }
+    private byte[]? streamCache { get; set; }
 
     /// <summary>
     /// 获得/设置 PDF文件URL, 默认'http' 开头自动使用流模式读取
@@ -169,7 +169,7 @@ public partial class PdfReader : IAsyncDisposable
             Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.PdfReader/app.js" + "?v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
             var userAgent = await Module!.InvokeAsync<string>("getUserAgent");
             var parser = Parser.GetDefault();
-            ClientInfo = parser.Parse(userAgent); 
+            ClientInfo = parser.Parse(userAgent);
             await Refresh();
         }
     }
@@ -217,13 +217,13 @@ public partial class PdfReader : IAsyncDisposable
             ReadOnly = readOnly ?? ReadOnly;
             Watermark = watermark ?? Watermark;
             CompatibilityMode = compatibilityMode ?? CompatibilityMode;
-            
-            if (CompatibilityNoneES5 || (ClientInfo!=null && ClientInfo.UA.Family.StartsWith("Chrome" ) == true && Convert.ToInt32(ClientInfo.UA.Major) < 97))
+
+            if (CompatibilityNoneES5 || (ClientInfo != null && ClientInfo.UA.Family.StartsWith("Chrome") == true && Convert.ToInt32(ClientInfo.UA.Major) < 97))
             {
                 CompatibilityMode = true;
                 ViewerBase = "/_content/BootstrapBlazor.PdfReader/compat/web/viewer.html";
             }
-            else if(CompatibilityMode || (ClientInfo != null && ClientInfo.UA.Family.StartsWith("Chrome") == true && Convert.ToInt32(ClientInfo.UA.Major) < 109))
+            else if (CompatibilityMode || (ClientInfo != null && ClientInfo.UA.Family.StartsWith("Chrome") == true && Convert.ToInt32(ClientInfo.UA.Major) < 109))
             {
                 ViewerBase = "/_content/BootstrapBlazor.PdfReader/2.6.347/web/viewer.html";
             }
@@ -231,7 +231,7 @@ public partial class PdfReader : IAsyncDisposable
             {
                 ViewerBase = ReadOnly ? "/_content/BootstrapBlazor.PdfReader/web/viewerlimit.html" : "/_content/BootstrapBlazor.PdfReader/web/viewer.html";
             }
-            
+
             if (Stream != null)
             {
                 await ShowPdf(Stream);
@@ -273,15 +273,23 @@ public partial class PdfReader : IAsyncDisposable
     {
         if (Module == null)
         {
-            Stream=stream; 
+            Stream = stream;
         }
         else
         {
-            Url = null;
-            var url = GenUrl(false);
-            UrlDebug = url;
-            using var streamRef = new DotNetStreamReference(stream);
-            await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
+            if (streamCache == null)
+            {
+                streamCache = new byte[stream.Length];
+                stream.Read(streamCache, 0, (int)stream.Length);
+            }
+            if (streamCache != null)
+            {
+                Url = null;
+                var url = GenUrl(false);
+                UrlDebug = url;
+                using var streamRef = new DotNetStreamReference(new MemoryStream(streamCache));
+                await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
+            }
         }
     }
 
