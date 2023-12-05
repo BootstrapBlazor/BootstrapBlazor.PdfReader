@@ -31,6 +31,7 @@ public partial class PdfReader : IAsyncDisposable
     /// </summary>
     [Parameter]
     public Stream? Stream { get; set; }
+
     private byte[]? streamCache { get; set; }
 
     /// <summary>
@@ -143,6 +144,12 @@ public partial class PdfReader : IAsyncDisposable
     public bool AutoStreamMode { get; set; } = true;
 
     /// <summary>
+    /// 获得/设置 读取本地文件路径
+    /// </summary> 
+    [Parameter]
+    public string? LocalFileName { get; set; }  
+
+    /// <summary>
     /// 获得/设置 兼容模式,兼容旧版浏览器 默认为 false
     /// </summary> 
     [Parameter]
@@ -235,6 +242,18 @@ public partial class PdfReader : IAsyncDisposable
             if (Stream != null)
             {
                 await ShowPdf(Stream);
+            }
+            else if (!string.IsNullOrEmpty(LocalFileName) && File.Exists(LocalFileName))
+            {
+                var streamLocal = new FileStream(LocalFileName, FileMode.Open, FileAccess.Read);
+                if (streamLocal != null)
+                {
+                    await ShowPdf(streamLocal);
+                }
+                else
+                {
+                    ErrorMessage = "No data";
+                }
             }
             else if (!string.IsNullOrEmpty(FileName) && (StreamMode || (AutoStreamMode && FileName.StartsWith("http"))))
             {

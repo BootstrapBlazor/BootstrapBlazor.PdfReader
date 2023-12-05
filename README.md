@@ -37,6 +37,7 @@ https://blazor.app1.es/pdfReaders
 |  ----  | ----  | ----  |  ----  | 
 | FileName  | PDF文件路径(Url或相对路径) | null | Filename |
 | StreamMode  | 使用流化模式,可跨域读取文件 | false | EnableStreamingMode |
+| LocalFileName  | PDF本地文件路径 | null |  |
 | Width  | 宽 单位(px/%) | 100% | 
 | Height  | 高 单位(px/%) | 500px | 
 | StyleString  | 组件外观 Css Style |  | 
@@ -63,6 +64,11 @@ https://blazor.app1.es/pdfReaders
 
 ---
 #### 更新历史
+
+v8.0.1
+- 添加 LocalFileName 读取本地文件路径
+- 添加 Stream 缓存提高性能
+- 优化搜索功能
 
 v7.2.0
 - 兼容 .pfb 和 .bcmap

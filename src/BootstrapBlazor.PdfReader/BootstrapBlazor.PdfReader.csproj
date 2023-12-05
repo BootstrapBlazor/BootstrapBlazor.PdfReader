@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Version>8.0.1-beta</Version>
+        <Version>8.0.1</Version>
         <PackageProjectUrl>https://github.com/densen2014/BootstrapBlazor.PdfReader</PackageProjectUrl>
         <RepositoryUrl>https://github.com/densen2014/BootstrapBlazor.PdfReader</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
