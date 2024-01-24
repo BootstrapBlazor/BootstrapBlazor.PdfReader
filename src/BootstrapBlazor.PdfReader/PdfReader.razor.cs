@@ -42,6 +42,7 @@ public partial class PdfReader : IAsyncDisposable
     /// </summary>
     [Parameter]
     public string? FileName { get; set; }
+    string? fileNameCache { get; set; }
 
     /// <summary>
     /// 获得/设置 使用流化模式,可跨域读取文件. 默认为 false
@@ -150,7 +151,8 @@ public partial class PdfReader : IAsyncDisposable
     /// 获得/设置 读取本地文件路径
     /// </summary> 
     [Parameter]
-    public string? LocalFileName { get; set; }  
+    public string? LocalFileName { get; set; }
+    string? localFileNameCache { get; set; }
 
     /// <summary>
     /// 获得/设置 兼容模式,兼容旧版浏览器 默认为 false
@@ -251,7 +253,8 @@ public partial class PdfReader : IAsyncDisposable
                 var streamLocal = new FileStream(LocalFileName, FileMode.Open, FileAccess.Read);
                 if (streamLocal != null)
                 {
-                    await ShowPdf(streamLocal);
+                    await ShowPdf(streamLocal, fileNameCache != localFileNameCache, true);
+                    localFileNameCache = LocalFileName;
                 }
                 else
                 {
@@ -264,7 +267,8 @@ public partial class PdfReader : IAsyncDisposable
                 var stream = await client.GetStreamAsync(FileName);
                 if (stream != null)
                 {
-                    await ShowPdf(stream);
+                    await ShowPdf(stream, fileNameCache != FileName);
+                    fileNameCache = FileName;
                 }
                 else
                 {
@@ -289,16 +293,36 @@ public partial class PdfReader : IAsyncDisposable
 
 
     /// <summary>
+    /// 打开 LocalFileName
+    /// </summary>
+    /// <param name="localFileName"></param> 
+    /// <returns></returns>
+    public virtual async Task ShowPdf(string localFileName)
+    {
+       LocalFileName = localFileName;
+       await Refresh();
+    }
+
+
+    /// <summary>
     /// 打开 stream
     /// </summary>
-    public virtual async Task ShowPdf(Stream stream)
+    /// <param name="stream"></param>
+    /// <param name="forceLoad">default true</param>
+    /// <returns></returns>
+    public virtual async Task ShowPdf(Stream stream, bool forceLoad = true, bool islocalFile = false)
     {
         if (Module == null)
         {
             Stream = stream;
         }
-        else
+        else if (islocalFile)
         {
+            if (forceLoad)
+            {
+                streamCache = new byte[stream.Length];
+                stream.Read(streamCache, 0, (int)stream.Length);
+            }
             if (streamCache == null)
             {
                 streamCache = new byte[stream.Length];
@@ -312,6 +336,14 @@ public partial class PdfReader : IAsyncDisposable
                 using var streamRef = new DotNetStreamReference(new MemoryStream(streamCache));
                 await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
             }
+        }
+        else
+        {
+            Url = null;
+            var url = GenUrl(false);
+            UrlDebug = url;
+            using var streamRef = new DotNetStreamReference(stream);
+            await Module!.InvokeVoidAsync("showPdf", url, Element, streamRef);
         }
     }
 

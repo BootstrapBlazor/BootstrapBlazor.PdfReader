@@ -46,7 +46,8 @@ https://blazor.app1.es/pdfReaders
 | Zoom | 缩放模式, EnumZoomMode 类型 | Auto |
 | Search | 查询字符串 | | 
 | Refresh() | 刷新组件 | |
-| ShowPdf(Stream stream) | 从 stream 渲染PDF | |
+| ShowPdf(Stream stream,bool forceLoad = true,islocalFile = false) | 从 stream 渲染PDF | |
+| ShowPdf(string localFileName) | 从 Local File 渲染PDF | |
 | NavigateToPage(int page) | 跳转页码 | |
 | Refresh(int page) | 跳转页码 | |
 | Refresh(string? search, int? page, EnumPageMode? pagemode, EnumZoomMode? zoom) | 刷新组件(查询关键字,页码,页面模式,缩放模式) | |
@@ -64,6 +65,11 @@ https://blazor.app1.es/pdfReaders
 
 ---
 #### 更新历史
+
+v8.0.3
+- 修复 ShowPdf 缓存问题
+- ShowPdf 添加参数,forceLoad ,islocalFile 
+- 添加 ShowPdf(string localFileName) 从 Local File 渲染PDF
 
 v8.0.1
 - 添加 LocalFileName 读取本地文件路径
