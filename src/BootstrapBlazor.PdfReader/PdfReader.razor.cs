@@ -355,7 +355,11 @@ public partial class PdfReader : IAsyncDisposable
     {
         if (Module is not null)
         {
-            await Module.DisposeAsync();
+            try
+            {
+                await Module.DisposeAsync();
+            }
+            catch { }
         }
         GC.SuppressFinalize(this);
     }
